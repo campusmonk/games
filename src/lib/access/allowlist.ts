@@ -3,9 +3,11 @@ import "server-only";
 import { promises as fs } from "fs";
 import path from "path";
 
+import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { invalidateMemo, memoize, memoTtlMs } from "./memo";
 import {
   accessCookieNames,
   accessCookieOptions,
@@ -496,6 +498,7 @@ export async function addAllowedEmail(emailValue: FormDataEntryValue | string | 
     if (emails.includes(email)) return { ok: true, message: "Email is already allowed." };
 
     await addEmailsToAllowlist([email]);
+    invalidateAllowlistMemo();
   } catch (error) {
     return { ok: false, message: getStorageErrorMessage(error) };
   }
@@ -516,6 +519,7 @@ async function addAllowedEmailValues(validEmails: string[], invalidCount = 0) {
 
     if (newEmails.length > 0) {
       await addEmailsToAllowlist(newEmails);
+      invalidateAllowlistMemo();
     }
 
     const skippedCount = validEmails.length - newEmails.length;
@@ -557,6 +561,7 @@ export async function deleteAllowedEmail(emailValue: FormDataEntryValue | string
 
   try {
     await deleteEmailFromAllowlist(email);
+    invalidateAllowlistMemo();
   } catch (error) {
     return { ok: false, message: getStorageErrorMessage(error) };
   }
@@ -615,13 +620,22 @@ export async function isEmailAllowed(emailValue: FormDataEntryValue | string | n
   const email = normalizeEmail(emailValue);
   if (!isValidEmail(email)) return false;
 
-  try {
-    if (getSupabaseConfig()) return isEmailInSupabaseAllowlist(email);
+  // This runs on every protected request (proxy, layout, and page), so the
+  // result is memoized per email rather than round-tripping to Supabase
+  // each time. Admin writes call invalidateAllowlistMemo().
+  return memoize(`allowlist:${email}`, memoTtlMs.allowlist, async () => {
+    try {
+      if (getSupabaseConfig()) return await isEmailInSupabaseAllowlist(email);
 
-    return (await readAllowlist()).includes(email);
-  } catch {
-    return false;
-  }
+      return (await readAllowlist()).includes(email);
+    } catch {
+      return false;
+    }
+  });
+}
+
+function invalidateAllowlistMemo() {
+  invalidateMemo("allowlist:");
 }
 
 export async function getUserDailyLimits(emailValue: FormDataEntryValue | string | null | undefined) {
@@ -657,7 +671,10 @@ export async function clearAdminAccess() {
   cookieStore.delete(accessCookieNames.admin);
 }
 
-export async function getUserSession() {
+// Deduped per request: a protected route resolves this in its layout and
+// again in the page (via claimDailyAttempt), which used to be two separate
+// signature verifications and two allowlist lookups.
+export const getUserSession = cache(async () => {
   const cookieStore = await cookies();
   const token = cookieStore.get(accessCookieNames.user)?.value;
   const session = await verifyAccessToken(token, "user");
@@ -665,7 +682,7 @@ export async function getUserSession() {
   if (!session || !(await isEmailAllowed(session.email))) return null;
 
   return session;
-}
+});
 
 export async function requireUserAccess() {
   const session = await getUserSession();

@@ -21,7 +21,7 @@ export default function GameCard({
   return (
     <Link
       href={href}
-      className={`flex w-full max-w-[460px] items-center gap-5 rounded-2xl border border-border bg-card px-6 py-5 text-card-foreground shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_88%)] transition hover:-translate-y-1 hover:border-primary hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${className}`}
+      className={`flex w-full max-w-[460px] items-center gap-5 rounded-2xl border border-border bg-card px-6 py-5 text-card-foreground shadow-pop-md transition hover:-translate-y-1 hover:border-primary hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${className}`}
     >
       <div className="relative h-14 w-14 shrink-0">
         <Image

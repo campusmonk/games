@@ -5,12 +5,12 @@ const AppDownloadSection = () => {
   return (
     <section className="bg-background px-4 py-14 text-foreground sm:px-8 sm:py-18 lg:px-12 lg:py-20">
       <div className="mx-auto flex max-w-7xl flex-col items-center text-center">
-        <div className="inline-flex items-center gap-2 rounded-lg border-4 border-foreground bg-primary px-5 py-2 font-inter text-base font-extrabold text-primary-foreground shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_20%)] sm:text-lg">
+        <div className="inline-flex items-center gap-2 rounded-lg border-4 border-foreground bg-primary px-5 py-2 font-inter text-base font-extrabold text-primary-foreground shadow-solid-md sm:text-lg">
           <Smartphone className="size-5" aria-hidden="true" />
           Mobile Access
         </div>
 
-        <h2 className="mt-6 font-game text-5xl leading-none text-foreground drop-shadow-[4px_4px_0_color-mix(in_oklch,var(--background),transparent_12%)] sm:text-4xl lg:text-5xl">
+        <h2 className="mt-6 font-game text-5xl leading-none text-foreground drop-shadow-pop-md sm:text-4xl lg:text-5xl">
           Download Our App
         </h2>
         <div className="mt-4 h-0.5 w-full max-w-3xl rounded-full bg-border shadow-[0_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_88%)]" />
@@ -23,7 +23,7 @@ const AppDownloadSection = () => {
           <a
             href="https://play.google.com/store/apps/details?id=co.lynde.bfwhv"
             aria-label="Get it on Google Play"
-            className="group flex min-h-24 items-center justify-center gap-4 rounded-lg border-4 border-foreground bg-card px-6 py-4 text-card-foreground shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_20%)] transition-transform hover:-translate-y-1 hover:bg-muted sm:min-w-80"
+            className="group flex min-h-24 items-center justify-center gap-4 rounded-lg border-4 border-foreground bg-card px-6 py-4 text-card-foreground shadow-solid-lg transition-transform hover:-translate-y-1 hover:bg-muted sm:min-w-80"
           >
             <Image
               src="/playstore.png"
@@ -45,7 +45,7 @@ const AppDownloadSection = () => {
           <a
             href="https://apps.apple.com/in/app/myinstitute/id1472483563"
             aria-label="Download on the App Store"
-            className="group flex min-h-24 items-center justify-center gap-4 rounded-lg border-4 border-foreground bg-card px-6 py-4 text-card-foreground shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_20%)] transition-transform hover:-translate-y-1 hover:bg-muted sm:min-w-80"
+            className="group flex min-h-24 items-center justify-center gap-4 rounded-lg border-4 border-foreground bg-card px-6 py-4 text-card-foreground shadow-solid-lg transition-transform hover:-translate-y-1 hover:bg-muted sm:min-w-80"
           >
                       <Image
               src="/app-store.png"

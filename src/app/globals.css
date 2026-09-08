@@ -9,9 +9,54 @@
   --font-inter: var(--font-inter);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-inter);
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  --font-heading: var(--font-game);
+
+  /* --- Hard-offset "pop" shadows -------------------------------------
+     The signature look of this app. Every one of these used to be written
+     inline as an arbitrary value; they are tokens now so the scale stays
+     consistent and both themes are handled in one place.
+
+     pop-*     soft, for cards / panels / inputs
+     solid-*   near-opaque, for the decorative hero blocks
+     primary-* primary-tinted, for highlighted panels
+     pixel-*   arcade buttons, tinted from --primary
+     success-* / danger-* game feedback buttons                        */
+  --shadow-pop-2xs: 2px 2px 0 0 var(--pop-shadow);
+  --shadow-pop-xs: 3px 3px 0 0 var(--pop-shadow);
+  --shadow-pop-sm: 4px 4px 0 0 var(--pop-shadow);
+  --shadow-pop-md: 5px 5px 0 0 var(--pop-shadow);
+  --shadow-pop-lg: 6px 6px 0 0 var(--pop-shadow);
+  --shadow-pop-xl: 7px 7px 0 0 var(--pop-shadow);
+
+  --shadow-solid-sm: 4px 4px 0 0 var(--pop-shadow-strong);
+  --shadow-solid-md: 5px 5px 0 0 var(--pop-shadow-strong);
+  --shadow-solid-lg: 7px 7px 0 0 var(--pop-shadow-strong);
+  --shadow-solid-xl: 8px 8px 0 0 var(--pop-shadow-strong);
+
+  --shadow-primary-lg: 7px 7px 0 0 var(--primary-shadow);
+  --shadow-primary-xl: 8px 8px 0 0 var(--primary-shadow);
+
+  --shadow-pixel-xs: 1px 1px 0 0 var(--pixel-ink);
+  --shadow-pixel-sm: 2px 2px 0 0 var(--pixel-ink);
+  --shadow-pixel-md: 4px 4px 0 0 var(--pixel-ink);
+  --shadow-pixel-lg: 5px 5px 0 0 var(--pixel-ink);
+
+  --shadow-success-xs: 1px 1px 0 0 var(--success-ink);
+  --shadow-success-sm: 2px 2px 0 0 var(--success-ink);
+  --shadow-danger-xs: 1px 1px 0 0 var(--danger-ink);
+  --shadow-danger-sm: 2px 2px 0 0 var(--danger-ink);
+
+  /* Matching text shadow for the display (font-game) headings, plus the
+     navbar's over-hero text halo (one token instead of a light/dark pair). */
+  --drop-shadow-pop-sm: 3px 3px 0 var(--pop-text-shadow);
+  --drop-shadow-pop-md: 4px 4px 0 var(--pop-text-shadow);
+  --drop-shadow-pop-lg: 5px 5px 0 var(--pop-text-shadow);
+  --drop-shadow-halo: 0 2px 8px var(--halo);
+
+  /* Used by the navbar and footer shells (max-w-8xl was not a real class). */
+  --container-8xl: 90rem;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -41,6 +86,16 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-pop-shadow: var(--pop-shadow);
+  --color-pixel-ink: var(--pixel-ink);
+  --color-arcade: var(--arcade);
+  --color-arcade-ink: var(--arcade-ink);
+  --color-success-ink: var(--success-ink);
+  --color-danger-ink: var(--danger-ink);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -83,6 +138,33 @@
   --sidebar-accent-foreground: oklch(0.2 0.035 260);
   --sidebar-border: oklch(0.86 0.025 248);
   --sidebar-ring: oklch(0.78 0.17 75);
+
+  --success: oklch(0.72 0.15 152);
+  --success-foreground: oklch(0.16 0.025 260);
+  --danger: oklch(0.63 0.21 22);
+  --danger-foreground: oklch(0.98 0.01 86);
+}
+
+/* Derived once. color-mix() in a custom property resolves against whatever
+   --foreground / --primary are at the element, so these follow the theme
+   automatically and only --halo needs a .dark override. */
+:root {
+  --pop-shadow: color-mix(in oklch, var(--foreground), transparent 85%);
+  --pop-shadow-strong: color-mix(in oklch, var(--foreground), transparent 15%);
+  --primary-shadow: color-mix(in oklch, var(--primary), transparent 24%);
+  --pop-text-shadow: color-mix(in oklch, var(--background), var(--foreground) 12%);
+  --pixel-ink: color-mix(in oklch, var(--primary), black 45%);
+  --success-ink: color-mix(in oklch, var(--success), black 55%);
+  --danger-ink: color-mix(in oklch, var(--danger), black 55%);
+  /* Arcade gold. Deliberately theme-independent: the game boards read the
+     same in light and dark, and this is the brand accent (was #ffc516). */
+  --arcade: oklch(0.855 0.175 88);
+  --arcade-ink: oklch(0.5 0.115 78);
+  --halo: oklch(1 0 0 / 55%);
+}
+
+.dark {
+  --halo: oklch(0 0 0 / 75%);
 }
 
 .dark {
@@ -117,6 +199,11 @@
   --sidebar-accent-foreground: oklch(0.97 0.012 86);
   --sidebar-border: oklch(1 0 0 / 12%);
   --sidebar-ring: oklch(0.84 0.18 78);
+
+  --success: oklch(0.76 0.16 152);
+  --success-foreground: oklch(0.16 0.025 260);
+  --danger: oklch(0.7 0.19 22);
+  --danger-foreground: oklch(0.16 0.025 260);
 }
 
 @layer base {

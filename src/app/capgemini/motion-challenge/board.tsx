@@ -31,7 +31,7 @@ type Props = {
 const pieceClasses: Record<MotionEntity["color"], string> = {
   red: "border-[#7f1d1d] bg-[#ef4444] text-white shadow-[inset_-5px_-7px_0_rgba(127,29,29,0.34)]",
   green:
-    "border-[#14532d] bg-[#22c55e] text-black shadow-[inset_-5px_-7px_0_rgba(20,83,45,0.24)]",
+    "border-success-ink bg-success text-black shadow-[inset_-5px_-7px_0_rgba(20,83,45,0.24)]",
   blue: "border-[#1d4ed8] bg-[#38bdf8] text-black shadow-[inset_-5px_-7px_0_rgba(29,78,216,0.22)]",
   amber:
     "border-[#92400e] bg-[#f59e0b] text-black shadow-[inset_-5px_-7px_0_rgba(146,64,14,0.26)]",
@@ -272,7 +272,7 @@ export default function MotionChallengeBoard({
     <div className="mx-auto w-full max-w-[min(92vw,560px)] lg:max-w-[min(100%,560px,calc(100svh-22rem))]">
       <div
         ref={boardRef}
-        className="relative aspect-square overflow-hidden rounded-lg border-4 border-border bg-background shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]"
+        className="relative aspect-square overflow-hidden rounded-lg border-4 border-border bg-background shadow-pop-xl"
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${level.cols}, minmax(0, 1fr))`,
@@ -305,7 +305,7 @@ export default function MotionChallengeBoard({
                 (x + y) % 2 === 0 && "bg-muted",
                 isHole && "flex items-center justify-center bg-[#3b0000] ring-2 ring-inset ring-[#ef4444]/50 shadow-[inset_0_0_18px_rgba(239,68,68,0.30)]",
                 isHighlighted &&
-                  "bg-[#ffc516]/25 ring-2 ring-inset ring-[#ffc516]/70",
+                  "bg-arcade/25 ring-2 ring-inset ring-arcade/70",
                 isInvalid &&
                   !isHole &&
                   "bg-red-950/30"
@@ -361,7 +361,7 @@ export default function MotionChallengeBoard({
                   "cursor-grab hover:-translate-y-0.5 focus-visible:ring-4 focus-visible:ring-ring/40 active:cursor-grabbing",
                 entity.type === "rock" && "cursor-not-allowed",
                 selected &&
-                  "z-20 ring-4 ring-[#ffc516] ring-offset-2 ring-offset-background",
+                  "z-20 ring-4 ring-arcade ring-offset-2 ring-offset-background",
                 isDragging && "opacity-40 scale-95"
               )}
               style={{
@@ -408,7 +408,7 @@ export default function MotionChallengeBoard({
                               event.stopPropagation();
                               onMove(entity.id, direction);
                             }}
-                            className="flex size-8 items-center justify-center rounded-full border-2 border-black bg-[#ffc516] text-black shadow-[2px_2px_0_0_#000] transition hover:-translate-y-0.5 sm:size-9"
+                            className="flex size-8 items-center justify-center rounded-full border-2 border-black bg-arcade text-black shadow-pixel-sm transition hover:-translate-y-0.5 sm:size-9"
                           >
                             <Icon className="size-4 sm:size-5" />
                           </button>

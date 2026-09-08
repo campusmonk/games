@@ -65,7 +65,7 @@ export default function CommunicationRoundPage() {
           "h1",
           {
             className:
-              "font-game text-3xl leading-none text-foreground drop-shadow-[4px_4px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-4xl",
+              "font-game text-3xl leading-none text-foreground drop-shadow-pop-md sm:text-4xl",
           },
           "Explore Rounds",
         ),

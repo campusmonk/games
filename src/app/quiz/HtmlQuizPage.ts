@@ -27,9 +27,15 @@ const themeBridgeScript = `
 
     function applyTheme() {
       var theme = isDarkTheme() ? "dark" : "light";
+      var isDark = theme === "dark";
+      var root = document.documentElement;
 
-      document.documentElement.style.colorScheme = theme;
-      document.body.classList.toggle("dark", theme === "dark");
+      root.style.colorScheme = theme;
+      // Mark <html> as well as <body>: the stylesheet keys the palette off
+      // .dark, so this also paints the html background and survives app.js
+      // re-toggling the class on body from its own stored state.
+      root.classList.toggle("dark", isDark);
+      if (document.body) document.body.classList.toggle("dark", isDark);
 
       try {
         localStorage.setItem("cm_acc_theme", theme);
@@ -69,7 +75,10 @@ function prepareHtml(html: string, script: string, storageKey: string) {
       /<script\s+src=["']app\.js["']\s*(?:defer\s*)?><\/script>/,
       `<script>${escapeInlineScript(scopedScript)}</script>`,
     )
-    .replace("</body>", `${themeBridgeScript.replaceAll("cm_acc_theme", storageKey)}</body>`);
+    // In <head>, so the theme is resolved before first paint and before
+    // app.js reads cm_acc_theme out of localStorage. It used to run after
+    // app.js at the end of <body>, which flashed the wrong theme.
+    .replace("</head>", `${themeBridgeScript.replaceAll("cm_acc_theme", storageKey)}</head>`);
 }
 
 export default async function HtmlQuizPage({

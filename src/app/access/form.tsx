@@ -16,7 +16,7 @@ export default function AccessForm({ next }: Props) {
   const [state, action, pending] = useActionState<AccessState, FormData>(requestAccess, {});
 
   return (
-    <form action={action} className="rounded-lg border border-border bg-card p-5 text-card-foreground shadow-[6px_6px_0_0_color-mix(in_oklch,var(--foreground),transparent_88%)]">
+    <form action={action} className="rounded-lg border border-border bg-card p-5 text-card-foreground shadow-pop-lg">
       <input name="next" type="hidden" value={next} />
 
       <div className="grid gap-2">

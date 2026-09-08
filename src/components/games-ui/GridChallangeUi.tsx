@@ -56,7 +56,7 @@ function StatPill({
   return (
     <div
       className={cn(
-        "min-w-0 rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:px-4",
+        "min-w-0 rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-pop-xs sm:px-4",
         className
       )}
     >
@@ -75,7 +75,7 @@ function Hud({ lives, level, score, streak }: Pick<Props, "lives" | "level" | "s
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       <StatPill label="Level" value={level} />
       <StatPill label="Score" value={score} />
-      <div className="rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:px-4">
+      <div className="rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-pop-xs sm:px-4">
         <p className="font-inter text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
           Lives
         </p>
@@ -85,18 +85,18 @@ function Hud({ lives, level, score, streak }: Pick<Props, "lives" | "level" | "s
               key={index}
               className={cn(
                 "size-5",
-                index < lives ? "fill-[#f43f5e] text-[#f43f5e]" : "text-muted-foreground/35"
+                index < lives ? "fill-danger text-danger" : "text-muted-foreground/35"
               )}
             />
           ))}
         </div>
       </div>
-      <div className="rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:px-4">
+      <div className="rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-pop-xs sm:px-4">
         <p className="font-inter text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
           Streak
         </p>
         <p className="mt-0.5 flex items-center gap-1 font-game text-2xl leading-none text-primary sm:text-3xl">
-          <Zap className="size-4 fill-[#ffc516]" />
+          <Zap className="size-4 fill-arcade" />
           {streak}
         </p>
       </div>
@@ -125,7 +125,7 @@ function DotField({
   return (
     <div
       className={cn(
-        "relative aspect-[16/9] w-full overflow-hidden rounded-lg border-4 border-border bg-card shadow-[6px_6px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]",
+        "relative aspect-[16/9] w-full overflow-hidden rounded-lg border-4 border-border bg-card shadow-pop-lg",
         "bg-[linear-gradient(rgba(244,160,29,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(244,160,29,0.08)_1px,transparent_1px)] bg-[size:34px_34px]",
         shake && "animate-[grid-shake_0.38s_ease-in-out]"
       )}
@@ -145,8 +145,8 @@ function DotField({
             className={cn(
               "absolute flex aspect-square w-[clamp(18px,3.8vw,30px)] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 text-[10px] font-black transition-all duration-200",
               isBlinking &&
-                "animate-pulse border-[#fff3b0] bg-[#ffc516] text-black",
-              isClicked && "border-[#86efac] bg-[#22c55e] text-black",
+                "animate-pulse border-arcade/60 bg-arcade text-black",
+              isClicked && "border-success bg-success text-black",
               isClickable && !isClicked && "border-foreground/35 bg-foreground/25 hover:scale-110 hover:bg-primary",
               !isClickable && !isBlinking && !isClicked && "border-border bg-muted"
             )}
@@ -166,7 +166,7 @@ function GridPattern({ grid }: { grid: boolean[][] }) {
 
   return (
     <div
-      className="grid rounded-md border-2 border-border bg-card p-2 shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]"
+      className="grid rounded-md border-2 border-border bg-card p-2 shadow-pop-xs"
       style={{ gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`, gap: 4 }}
     >
       {grid.map((row, rowIndex) =>
@@ -175,7 +175,7 @@ function GridPattern({ grid }: { grid: boolean[][] }) {
             key={`${rowIndex}-${colIndex}`}
             className={cn(
               "size-6 rounded-[3px] border border-border sm:size-8",
-              filled ? "bg-[#ffc516] shadow-[0_0_10px_rgba(255,197,22,0.35)]" : "bg-muted"
+              filled ? "bg-arcade shadow-[0_0_10px_rgba(255,197,22,0.35)]" : "bg-muted"
             )}
           />
         ))
@@ -205,7 +205,7 @@ function GameShell({
         <p className="font-game text-xl leading-none text-primary sm:text-2xl">
           Grid Puzzle
         </p>
-        <h1 className="font-game text-4xl leading-none text-foreground drop-shadow-[4px_4px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-5xl lg:text-6xl">
+        <h1 className="font-game text-4xl leading-none text-foreground drop-shadow-pop-md sm:text-5xl lg:text-6xl">
           Grid Challange
         </h1>
         <p className="font-inter text-sm font-semibold text-muted-foreground">{phaseLabel}</p>
@@ -251,7 +251,7 @@ export default function GridChallangeUi({
           <p className="font-game text-xl leading-none text-primary sm:text-2xl">
             Memory + Symmetry
           </p>
-          <h1 className="mt-3 font-game text-5xl leading-[0.9] text-foreground drop-shadow-[5px_5px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-6xl lg:text-7xl">
+          <h1 className="mt-3 font-game text-5xl leading-[0.9] text-foreground drop-shadow-pop-lg sm:text-6xl lg:text-7xl">
             Grid Challange
           </h1>
           <p className="mt-5 max-w-xl font-inter text-base font-semibold leading-7 text-muted-foreground">
@@ -262,7 +262,7 @@ export default function GridChallangeUi({
             {["Blink", "Mirror", "Recall"].map((label, index) => (
               <div
                 key={label}
-                className="rounded-md border-2 border-border bg-card p-3 text-center text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]"
+                className="rounded-md border-2 border-border bg-card p-3 text-center text-card-foreground shadow-pop-xs"
               >
                 <p className="font-game text-3xl leading-none text-primary">{index + 1}</p>
                 <p className="mt-1 font-inter text-xs font-black uppercase tracking-wide text-card-foreground">
@@ -275,14 +275,14 @@ export default function GridChallangeUi({
             variant="pixel"
             size="lg"
             onClick={onStart}
-            className="mt-8 h-14 rounded-lg border-4 px-9 font-game text-3xl shadow-[5px_5px_0_0_#8a6200]"
+            className="mt-8 h-14 rounded-lg border-4 px-9 font-game text-3xl shadow-pixel-lg"
           >
             <Sparkles className="size-5" />
             Start Game
           </Button>
         </section>
 
-        <section className="rounded-lg border-4 border-border bg-card p-4 shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]">
+        <section className="rounded-lg border-4 border-border bg-card p-4 shadow-pop-xl">
           <DotField
             dots={[
               { id: 1, x: 18, y: 30 },
@@ -311,10 +311,10 @@ export default function GridChallangeUi({
         score={score}
         streak={streak}
       >
-        <section className="mx-auto grid w-full max-w-3xl gap-4 rounded-lg border-4 border-border bg-card p-5 text-center text-card-foreground shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:grid-cols-3">
+        <section className="mx-auto grid w-full max-w-3xl gap-4 rounded-lg border-4 border-border bg-card p-5 text-center text-card-foreground shadow-pop-xl sm:grid-cols-3">
           <div className="sm:col-span-3">
-            <Trophy className="mx-auto size-10 fill-[#ffc516] text-[#ffc516]" />
-            <h2 className="mt-3 font-game text-4xl leading-none text-card-foreground drop-shadow-[3px_3px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)]">
+            <Trophy className="mx-auto size-10 fill-arcade text-arcade" />
+            <h2 className="mt-3 font-game text-4xl leading-none text-card-foreground drop-shadow-pop-sm">
               Game Over
             </h2>
           </div>
@@ -322,10 +322,10 @@ export default function GridChallangeUi({
           <StatPill label="Best Level" value={highestLevel} />
           <StatPill label="Accuracy" value={`${symAccuracy}%`} />
           <div className="sm:col-span-3 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-md border-2 border-border bg-card p-3 font-inter text-sm font-bold text-[#22c55e]">
+            <div className="rounded-md border-2 border-border bg-card p-3 font-inter text-sm font-bold text-success">
               Correct symmetry: {symCorrect}
             </div>
-            <div className="rounded-md border-2 border-border bg-card p-3 font-inter text-sm font-bold text-[#fb7185]">
+            <div className="rounded-md border-2 border-border bg-card p-3 font-inter text-sm font-bold text-danger">
               Wrong symmetry: {symWrong}
             </div>
           </div>
@@ -354,12 +354,12 @@ export default function GridChallangeUi({
         score={score}
         streak={streak}
       >
-        <section className="mx-auto w-full max-w-3xl rounded-lg border-4 border-border bg-card p-4 shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:p-5">
+        <section className="mx-auto w-full max-w-3xl rounded-lg border-4 border-border bg-card p-4 shadow-pop-xl sm:p-5">
           <div className="h-3 overflow-hidden rounded-full border-2 border-border bg-muted">
             <div
               className={cn(
                 "h-full transition-all duration-500",
-                progress > 0.5 ? "bg-[#22c55e]" : progress > 0.25 ? "bg-[#ffc516]" : "bg-[#f43f5e]"
+                progress > 0.5 ? "bg-success" : progress > 0.25 ? "bg-arcade" : "bg-danger"
               )}
               style={{ width: `${progress * 100}%` }}
             />
@@ -383,7 +383,7 @@ export default function GridChallangeUi({
               type="button"
               onClick={() => onAnswer(true)}
               disabled={symmetryAnswered}
-              className="h-12 rounded-lg border-2 border-[#14532d] bg-[#22c55e] font-game text-2xl text-black hover:bg-[#16a34a]"
+              className="h-12 rounded-lg border-2 border-success-ink bg-success font-game text-2xl text-black hover:bg-success-ink"
             >
               Symmetric
             </Button>
@@ -391,7 +391,7 @@ export default function GridChallangeUi({
               type="button"
               onClick={() => onAnswer(false)}
               disabled={symmetryAnswered}
-              className="h-12 rounded-lg border-2 border-[#881337] bg-[#fb7185] font-game text-2xl text-black hover:bg-[#f43f5e]"
+              className="h-12 rounded-lg border-2 border-danger-ink bg-danger font-game text-2xl text-black hover:bg-danger"
             >
               Not Symmetric
             </Button>
@@ -400,7 +400,7 @@ export default function GridChallangeUi({
             <div
               className={cn(
                 "mt-4 flex items-center justify-center gap-2 font-inter text-sm font-black",
-                lastSymmetryCorrect ? "text-[#22c55e]" : "text-[#fb7185]"
+                lastSymmetryCorrect ? "text-success" : "text-danger"
               )}
             >
               {lastSymmetryCorrect ? <CheckCircle2 className="size-5" /> : <XCircle className="size-5" />}
@@ -425,7 +425,7 @@ export default function GridChallangeUi({
       streak={streak}
     >
       <section className="mx-auto flex w-full max-w-4xl flex-col gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border-4 border-border bg-card p-3 shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border-4 border-border bg-card p-3 shadow-pop-md">
           <p className="font-game text-2xl leading-none text-primary sm:text-3xl">
             {phase === "blinking" ? "Remember this dot!" : "Click in the same order"}
           </p>
@@ -436,9 +436,9 @@ export default function GridChallangeUi({
                 className={cn(
                   "flex size-8 items-center justify-center rounded-full border-2 font-game text-xl leading-none",
                   index < recallClicks.length
-                    ? "border-[#22c55e] bg-[#22c55e] text-black"
+                    ? "border-success bg-success text-black"
                     : index === recallClicks.length && phase === "recall"
-                      ? "animate-pulse border-[#ffc516] text-[#ffc516]"
+                      ? "animate-pulse border-arcade text-arcade"
                       : "border-border text-muted-foreground/50"
                 )}
               >

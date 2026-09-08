@@ -74,7 +74,7 @@ const Navbar = () => {
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
         isScrolled
           ? "border-b border-border/70 bg-background/92 text-foreground shadow-lg shadow-black/10 backdrop-blur-xl dark:shadow-black/30"
-          : "bg-transparent text-foreground dark:text-white"
+          : "bg-transparent text-foreground"
       }`}
     >
       <nav className="mx-auto flex h-16 max-w-8xl items-center justify-between px-4 sm:h-20 sm:px-8 lg:h-24 lg:px-10">
@@ -84,7 +84,7 @@ const Navbar = () => {
             alt="Logo"
             width={58}
             height={58}
-            className="size-9 object-contain sm:size-12 lg:size-[58px]"
+            className="size-9 object-contain sm:size-12 lg:size-14.5"
           />
         </Link>
 
@@ -98,7 +98,7 @@ const Navbar = () => {
                   className={`${navigationMenuTriggerStyle()} bg-transparent font-inter text-lg font-semibold text-current/85 ${
                     isScrolled
                       ? "drop-shadow-none hover:bg-accent/70 hover:text-foreground focus:bg-accent/70"
-                      : "drop-shadow-[0_2px_8px_rgba(255,255,255,0.55)] hover:bg-foreground/10 hover:text-foreground focus:bg-foreground/10 dark:drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)] dark:hover:bg-white/10 dark:hover:text-white dark:focus:bg-white/10"
+                      : "drop-shadow-halo hover:bg-foreground/10 hover:text-foreground focus:bg-foreground/10"
                   }`}
                 >
                   {link.label}
@@ -110,7 +110,7 @@ const Navbar = () => {
                 className={`bg-transparent font-inter text-lg font-semibold text-current/85 ${
                   isScrolled
                     ? "drop-shadow-none hover:bg-accent/70 hover:text-foreground focus:bg-accent/70 data-[state=open]:bg-accent/70 data-[state=open]:text-foreground"
-                    : "drop-shadow-[0_2px_8px_rgba(255,255,255,0.55)] hover:bg-foreground/10 hover:text-foreground focus:bg-foreground/10 data-[state=open]:bg-foreground/10 data-[state=open]:text-foreground dark:drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)] dark:hover:bg-white/10 dark:hover:text-white dark:focus:bg-white/10 dark:data-[state=open]:bg-white/10 dark:data-[state=open]:text-white"
+                    : "drop-shadow-halo hover:bg-foreground/10 hover:text-foreground focus:bg-foreground/10 data-[state=open]:bg-foreground/10 data-[state=open]:text-foreground"
                 }`}
               >
                 Games
@@ -138,7 +138,7 @@ const Navbar = () => {
             className={`border shadow-[0_2px_10px_rgba(0,0,0,0.25)] ${
               isScrolled
                 ? "border-border bg-card/80 text-foreground hover:bg-accent hover:text-accent-foreground"
-                : "border-foreground/20 bg-background/70 text-foreground hover:bg-accent hover:text-accent-foreground dark:border-white/25 dark:bg-black/15 dark:text-white dark:hover:bg-white/15 dark:hover:text-white"
+                : "border-foreground/20 bg-background/70 text-foreground hover:bg-accent hover:text-accent-foreground"
             }`}
             aria-label={themeToggleLabel}
             title={themeToggleLabel}
@@ -158,7 +158,7 @@ const Navbar = () => {
                   className={`border shadow-[0_2px_10px_rgba(0,0,0,0.25)] md:hidden ${
                     isScrolled
                       ? "border-border bg-card/80 text-foreground hover:bg-accent hover:text-accent-foreground"
-                      : "border-foreground/20 bg-background/70 text-foreground hover:bg-accent hover:text-accent-foreground dark:border-white/20 dark:bg-black/10 dark:text-white dark:hover:bg-white/10 dark:hover:text-white"
+                      : "border-foreground/20 bg-background/70 text-foreground hover:bg-accent hover:text-accent-foreground"
                   }`}
                   aria-label="Open navigation menu"
                 />
@@ -205,7 +205,7 @@ const Navbar = () => {
                 </div>
                 <SheetClose
                   render={<Link href="/#all-games" />}
-                  className="mt-auto inline-flex h-12 items-center justify-center rounded-lg border-2 border-black bg-yellow-400 px-4 font-game text-2xl text-black shadow-[4px_4px_0_0_#8a6200] transition-all hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_0_#8a6200]"
+                  className="mt-auto inline-flex h-12 items-center justify-center rounded-lg border-2 border-pixel-ink bg-primary px-4 font-game text-2xl text-primary-foreground shadow-pixel-md transition-all hover:translate-x-px hover:translate-y-px hover:shadow-pixel-sm"
                 >
                   Play Now
                 </SheetClose>

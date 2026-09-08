@@ -12,7 +12,7 @@ export default function AdminLoginForm() {
   const [state, action, pending] = useActionState<AdminActionState, FormData>(loginAdmin, {});
 
   return (
-    <form action={action} className="rounded-lg border border-border bg-card p-5 text-card-foreground shadow-[6px_6px_0_0_color-mix(in_oklch,var(--foreground),transparent_88%)]">
+    <form action={action} className="rounded-lg border border-border bg-card p-5 text-card-foreground shadow-pop-lg">
       <div className="grid gap-2">
         <Label htmlFor="password" className="text-card-foreground/80">
           Password

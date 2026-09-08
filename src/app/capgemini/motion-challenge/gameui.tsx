@@ -56,7 +56,7 @@ function StatPill({
   return (
     <div
       className={cn(
-        "min-w-0 rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:px-4",
+        "min-w-0 rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-pop-xs sm:px-4",
         className
       )}
     >
@@ -97,7 +97,7 @@ function GameShell({
         <p className="font-game text-xl leading-none text-primary sm:text-2xl">
           Capgemini Game
         </p>
-        <h1 className="font-game text-4xl leading-none text-foreground drop-shadow-[4px_4px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-5xl lg:text-6xl lg:[@media(max-height:800px)]:text-5xl">
+        <h1 className="font-game text-4xl leading-none text-foreground drop-shadow-pop-md sm:text-5xl lg:text-6xl lg:[@media(max-height:800px)]:text-5xl">
           Motion Challenge
         </h1>
         <p className="font-inter text-sm font-semibold text-muted-foreground">{phaseLabel}</p>
@@ -112,7 +112,7 @@ function GameShell({
           </div>
           <div className="h-2.5 w-full overflow-hidden rounded-full border border-border bg-muted">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#f4a01d] to-[#ffc516] transition-all duration-500"
+              className="h-full rounded-full bg-gradient-to-r from-arcade to-arcade transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -122,8 +122,8 @@ function GameShell({
         <StatPill label="Level" value={`${levelNumber}/${totalLevels}`} />
         <StatPill label="Session" value={timer} />
         <StatPill label="Score" value={score} />
-        <StatPill label="Solved" value={correct} className="border-[#14532d]" />
-        <StatPill label="Skipped" value={wrong} className="border-[#881337]" />
+        <StatPill label="Solved" value={correct} className="border-success-ink" />
+        <StatPill label="Skipped" value={wrong} className="border-danger-ink" />
       </div>
       {children}
     </div>
@@ -144,7 +144,7 @@ function LevelCard({
   const overPar = moves > level.par;
 
   return (
-    <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]">
+    <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-pop-md">
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="font-inter text-[10px] font-black uppercase tracking-wide text-muted-foreground">
@@ -161,7 +161,7 @@ function LevelCard({
           <p
             className={cn(
               "mt-1 font-game text-3xl leading-none",
-              overPar ? "text-[#fb7185]" : "text-primary"
+              overPar ? "text-danger" : "text-primary"
             )}
           >
             {moves}/{level.par}
@@ -174,7 +174,7 @@ function LevelCard({
 
 function PreviewBoard() {
   return (
-    <section className="rounded-lg border-4 border-border bg-card p-4 shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]">
+    <section className="rounded-lg border-4 border-border bg-card p-4 shadow-pop-xl">
       <div className="grid aspect-square min-h-[320px] grid-cols-6 grid-rows-6 overflow-hidden rounded-md border-2 border-border bg-background">
         {Array.from({ length: 36 }).map((_, index) => {
           const x = index % 6;
@@ -194,7 +194,7 @@ function PreviewBoard() {
                 <div className="absolute inset-[12%] rounded-full border-4 border-[#7f1d1d] bg-[#ef4444] shadow-[inset_-5px_-7px_0_rgba(127,29,29,0.34)]" />
               )}
               {x === 1 && y === 4 && (
-                <div className="absolute inset-x-[10%] top-[8%] z-10 flex h-[190%] items-center justify-center rounded-md border-4 border-[#14532d] bg-[#22c55e] text-black shadow-[inset_-5px_-7px_0_rgba(20,83,45,0.24)]">
+                <div className="absolute inset-x-[10%] top-[8%] z-10 flex h-[190%] items-center justify-center rounded-md border-4 border-success-ink bg-success text-black shadow-[inset_-5px_-7px_0_rgba(20,83,45,0.24)]">
                   <GripHorizontal className="size-6 opacity-65" />
                 </div>
               )}
@@ -252,7 +252,7 @@ export default function MotionChallengeUI({
           <p className="font-game text-xl leading-none text-primary sm:text-2xl">
             Movement + Planning
           </p>
-          <h1 className="mt-3 font-game text-5xl leading-[0.9] text-foreground drop-shadow-[5px_5px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-6xl lg:text-7xl">
+          <h1 className="mt-3 font-game text-5xl leading-[0.9] text-foreground drop-shadow-pop-lg sm:text-6xl lg:text-7xl">
             Motion Challenge
           </h1>
           <p className="mt-5 max-w-xl font-inter text-base font-semibold leading-7 text-muted-foreground">
@@ -262,7 +262,7 @@ export default function MotionChallengeUI({
             {["Drag or Tap", "Slide", "Score"].map((label, index) => (
               <div
                 key={label}
-                className="rounded-md border-2 border-border bg-card p-3 text-center text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]"
+                className="rounded-md border-2 border-border bg-card p-3 text-center text-card-foreground shadow-pop-xs"
               >
                 <p className="font-game text-3xl leading-none text-primary">{index + 1}</p>
                 <p className="mt-1 font-inter text-xs font-black uppercase tracking-wide text-card-foreground">
@@ -275,7 +275,7 @@ export default function MotionChallengeUI({
             variant="pixel"
             size="lg"
             onClick={onStart}
-            className="mt-8 h-14 rounded-lg border-4 px-9 font-game text-3xl shadow-[5px_5px_0_0_#8a6200]"
+            className="mt-8 h-14 rounded-lg border-4 px-9 font-game text-3xl shadow-pixel-lg"
           >
             <Sparkles className="size-5" />
             Start Game
@@ -300,15 +300,15 @@ export default function MotionChallengeUI({
         correct={correct}
         wrong={wrong}
       >
-        <section className="mx-auto grid w-full max-w-3xl gap-4 rounded-lg border-4 border-border bg-card p-5 text-center text-card-foreground shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:grid-cols-3">
+        <section className="mx-auto grid w-full max-w-3xl gap-4 rounded-lg border-4 border-border bg-card p-5 text-center text-card-foreground shadow-pop-xl sm:grid-cols-3">
           <div className="sm:col-span-3">
-            <Trophy className="mx-auto size-10 fill-[#ffc516] text-[#ffc516]" />
-            <h2 className="mt-3 font-game text-4xl leading-none text-card-foreground drop-shadow-[3px_3px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)]">
+            <Trophy className="mx-auto size-10 fill-arcade text-arcade" />
+            <h2 className="mt-3 font-game text-4xl leading-none text-card-foreground drop-shadow-pop-sm">
               Results
             </h2>
           </div>
           <StatPill label="Final Score" value={score} />
-          <StatPill label="Boards Solved" value={correct} className="border-[#14532d]" />
+          <StatPill label="Boards Solved" value={correct} className="border-success-ink" />
           <StatPill label="Accuracy" value={`${accuracy}%`} />
           <Button
             variant="pixel"
@@ -337,7 +337,7 @@ export default function MotionChallengeUI({
       <section className="mx-auto flex w-full max-w-4xl flex-col gap-3 sm:gap-4">
         <div className="grid gap-3 lg:grid-cols-[1fr_250px] lg:gap-4">
           <LevelCard level={level} moves={moves} levelNumber={levelNumber} totalLevels={totalLevels} />
-          <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]">
+          <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-pop-md">
             <div className="flex items-center justify-between gap-3">
               <p className="flex items-center gap-2 font-inter text-xs font-black uppercase tracking-wide text-muted-foreground">
                 <Timer className="size-4" />
@@ -360,7 +360,7 @@ export default function MotionChallengeUI({
                 variant="pixel"
                 size="sm"
                 onClick={onSkipLevel}
-                className="h-10 rounded-lg border-4 bg-[#fb7185] font-game text-lg shadow-[2px_2px_0_0_#881337] hover:shadow-[1px_1px_0_0_#881337]"
+                className="h-10 rounded-lg border-4 bg-danger font-game text-lg shadow-danger-sm hover:shadow-danger-xs"
                 aria-label="Skip board"
               >
                 <SkipForward className="size-4" />
@@ -371,8 +371,8 @@ export default function MotionChallengeUI({
         </div>
 
         {isLevelWon && (
-          <div className="flex flex-col items-center gap-3 rounded-lg border-4 border-[#14532d] bg-card p-4 shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:flex-row sm:justify-between">
-            <div className="flex items-center gap-2 font-inter text-sm font-black text-[#22c55e]">
+          <div className="flex flex-col items-center gap-3 rounded-lg border-4 border-success-ink bg-card p-4 shadow-pop-md sm:flex-row sm:justify-between">
+            <div className="flex items-center gap-2 font-inter text-sm font-black text-success">
               <CheckCircle2 className="size-5" />
               Cleared in {moves} moves
             </div>
@@ -381,7 +381,7 @@ export default function MotionChallengeUI({
                 variant="pixel"
                 size="sm"
                 onClick={onNextLevel}
-                className="h-10 rounded-lg border-4 border-[#14532d] bg-[#22c55e] font-game text-lg text-black shadow-[2px_2px_0_0_#14532d] hover:shadow-[1px_1px_0_0_#14532d]"
+                className="h-10 rounded-lg border-4 border-success-ink bg-success font-game text-lg text-black shadow-success-sm hover:shadow-success-xs"
                 aria-label="Next level"
               >
                 Next Level
@@ -400,7 +400,7 @@ export default function MotionChallengeUI({
             onSelect={onSelect}
             onMove={onMove}
           />
-          <aside className="grid gap-3 rounded-lg border-4 border-border bg-card p-4 shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] lg:content-start">
+          <aside className="grid gap-3 rounded-lg border-4 border-border bg-card p-4 shadow-pop-md lg:content-start">
             <div className="flex items-start gap-3">
               <div className="flex size-10 shrink-0 items-center justify-center rounded-md border-2 border-[#7f1d1d] bg-[#ef4444] text-white">
                 <Target className="size-5" />
@@ -410,7 +410,7 @@ export default function MotionChallengeUI({
               </p>
             </div>
             <div className="flex items-start gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-md border-2 border-[#92400e] bg-[#ffc516] text-black">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-md border-2 border-[#92400e] bg-arcade text-black">
                 <Zap className="size-5" />
               </div>
               <p className="font-inter text-sm font-semibold leading-6 text-muted-foreground">

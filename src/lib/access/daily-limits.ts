@@ -4,6 +4,7 @@ import { promises as fs } from "fs";
 import path from "path";
 
 import { requireUserAccess } from "./allowlist";
+import { invalidateMemo, memoize, memoTtlMs } from "./memo";
 
 export type DailyLimitKind = "game" | "communication" | "debug";
 
@@ -164,23 +165,27 @@ function parseLimitInput(value: FormDataEntryValue | string | null | undefined) 
   return { ok: true as const, limit: parsed };
 }
 
+// Read on every attempt claim but only written from the admin screen, so
+// it is memoized and invalidated by updateGlobalDailyLimit().
 export async function getGlobalDailyLimits(): Promise<GlobalDailyLimits> {
-  if (getSupabaseConfig()) return readSupabaseGlobalDailyLimits();
+  return memoize("limits:global", memoTtlMs.limits, async () => {
+    if (getSupabaseConfig()) return readSupabaseGlobalDailyLimits();
 
-  await ensureLimitSettingsFile();
+    await ensureLimitSettingsFile();
 
-  try {
-    const raw = await fs.readFile(limitSettingsPath, "utf8");
-    const parsed = JSON.parse(raw) as LimitSettingsFile;
+    try {
+      const raw = await fs.readFile(limitSettingsPath, "utf8");
+      const parsed = JSON.parse(raw) as LimitSettingsFile;
 
-    return {
-      gamesPerDay: normalizeLimit(parsed.limits?.gamesPerDay),
-      communicationPerDay: normalizeLimit(parsed.limits?.communicationPerDay),
-      debugPerDay: normalizeLimit(parsed.limits?.debugPerDay),
-    };
-  } catch {
-    return defaultLimits;
-  }
+      return {
+        gamesPerDay: normalizeLimit(parsed.limits?.gamesPerDay),
+        communicationPerDay: normalizeLimit(parsed.limits?.communicationPerDay),
+        debugPerDay: normalizeLimit(parsed.limits?.debugPerDay),
+      };
+    } catch {
+      return defaultLimits;
+    }
+  });
 }
 
 async function writeGlobalDailyLimits(limits: GlobalDailyLimits) {
@@ -231,6 +236,8 @@ export async function updateGlobalDailyLimit(kind: DailyLimitKind, value: FormDa
 
     return { ok: false, message: detail.includes(debugSupabaseSetupMessage) ? detail : `Could not update the daily limit. ${detail}` };
   }
+
+  invalidateMemo("limits:");
 
   return { ok: true, message: "Daily limit updated." };
 }
@@ -423,8 +430,8 @@ async function claimSupabaseDailyAttemptForKey(
 }
 
 async function claimSupabaseDailyAttempt(kind: DailyLimitKind, itemId?: string): Promise<DailyLimitStatus> {
-  const session = await requireUserAccess();
-  const limits = await getGlobalDailyLimits();
+  // Independent reads: resolve them together instead of back to back.
+  const [session, limits] = await Promise.all([requireUserAccess(), getGlobalDailyLimits()]);
   const limit = getLimitForKind(limits, kind);
   const usageKey = getUsageKey(kind, itemId);
   const now = Date.now();
@@ -490,13 +497,15 @@ function findActiveUsageWindow(
 export async function claimDailyAttempt(kind: DailyLimitKind, itemId?: string): Promise<DailyLimitStatus> {
   if (getSupabaseConfig()) return claimSupabaseDailyAttempt(kind, itemId);
 
-  const session = await requireUserAccess();
-  const limits = await getGlobalDailyLimits();
+  const [session, limits, days] = await Promise.all([
+    requireUserAccess(),
+    getGlobalDailyLimits(),
+    readUsageFile(),
+  ]);
   const limit = getLimitForKind(limits, kind);
   const usageKey = getUsageKey(kind, itemId);
   const now = Date.now();
   const dateKey = getDateKey(new Date(now));
-  const days = await readUsageFile();
   const dayUsage = days[dateKey] || {};
   const userUsage = dayUsage[session.email] || {};
   const usageWindow = findActiveUsageWindow(days, session.email, usageKey, dateKey, now);

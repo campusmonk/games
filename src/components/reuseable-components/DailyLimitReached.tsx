@@ -20,7 +20,7 @@ export default function DailyLimitReached({ status }: DailyLimitReachedProps) {
 
   return (
     <main className="min-h-screen bg-background px-4 pb-16 pt-28 text-foreground sm:px-8 lg:px-12">
-      <section className="mx-auto max-w-xl rounded-lg border border-border bg-card p-6 text-center text-card-foreground shadow-[6px_6px_0_0_color-mix(in_oklch,var(--foreground),transparent_88%)] sm:p-8">
+      <section className="mx-auto max-w-xl rounded-lg border border-border bg-card p-6 text-center text-card-foreground shadow-pop-lg sm:p-8">
         <div className="mx-auto flex size-12 items-center justify-center rounded-lg border border-destructive/30 bg-destructive/10 text-destructive">
           <Ban className="size-6" />
         </div>

@@ -81,7 +81,7 @@ function StatPill({
   return (
     <div
       className={cn(
-        "min-w-0 rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:px-4",
+        "min-w-0 rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-pop-xs sm:px-4",
         className
       )}
     >
@@ -108,21 +108,21 @@ function Hud({
       <StatPill label="Score" value={score} />
       <StatPill label="Level" value={level} />
       <StatPill label="Time" value={formatTime(elapsedSeconds)} />
-      <div className="rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:px-4">
+      <div className="rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-pop-xs sm:px-4">
         <p className="font-inter text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
           Keys Left
         </p>
         <p className={cn("mt-0.5 flex items-center gap-1 font-game text-2xl leading-none sm:text-3xl", hasKey ? "text-primary" : "text-muted-foreground/45")}>
-          <KeyRound className={cn("size-5", hasKey && "fill-[#ffc516]")} />
+          <KeyRound className={cn("size-5", hasKey && "fill-arcade")} />
           {keysLeft === 0 ? "Done" : keysLeft}
         </p>
       </div>
-      <div className="rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:px-4">
+      <div className="rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-pop-xs sm:px-4">
         <p className="font-inter text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
           Streak
         </p>
-        <p className="mt-0.5 flex items-center gap-1 font-game text-2xl leading-none text-[#22c55e] sm:text-3xl">
-          <Zap className="size-4 fill-[#22c55e]" />
+        <p className="mt-0.5 flex items-center gap-1 font-game text-2xl leading-none text-success sm:text-3xl">
+          <Zap className="size-4 fill-success" />
           {streak}
         </p>
       </div>
@@ -155,7 +155,7 @@ function GameShell({
         <p className="font-game text-xl leading-none text-primary sm:text-2xl">
           Hidden Direction Locks
         </p>
-        <h1 className="font-game text-4xl leading-none text-foreground drop-shadow-[4px_4px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-5xl lg:text-6xl">
+        <h1 className="font-game text-4xl leading-none text-foreground drop-shadow-pop-md sm:text-5xl lg:text-6xl">
           Lock & Key Memory
         </h1>
         <p className="font-inter text-sm font-semibold text-muted-foreground">{phaseLabel}</p>
@@ -191,7 +191,7 @@ function DirectionButton({
       title={`Move ${direction}`}
       onClick={() => onMove(direction)}
       className={cn(
-        "size-12 rounded-md border-2 border-border bg-card p-0 text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] hover:bg-primary hover:text-primary-foreground",
+        "size-12 rounded-md border-2 border-border bg-card p-0 text-card-foreground shadow-pop-xs hover:bg-primary hover:text-primary-foreground",
         className
       )}
     >
@@ -242,7 +242,7 @@ function Board({
     <div className="mx-auto w-full max-w-[min(88vw,520px)]">
       <div
         className={cn(
-          "grid aspect-square overflow-hidden rounded-lg border-4 border-border bg-background shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]",
+          "grid aspect-square overflow-hidden rounded-lg border-4 border-border bg-background shadow-pop-xl",
           phase === "locked" && "animate-[grid-shake_0.38s_ease-in-out]"
         )}
         style={{ gridTemplateColumns: `repeat(${levelData.size}, minmax(0, 1fr))` }}
@@ -263,24 +263,24 @@ function Board({
                 "relative flex min-h-0 min-w-0 items-center justify-center border border-border bg-card transition-all duration-200",
                 (cell.row + cell.col) % 2 === 0 && "bg-muted",
                 isStart && "bg-secondary",
-                isSolution && "bg-[#14532d]/70",
+                isSolution && "bg-success-ink/70",
                 isPlayer && "z-10 scale-[0.96] bg-[#60a5fa] text-black shadow-[inset_0_0_0_3px_#dbeafe]",
-                (isFailed || isAttempted) && phase === "locked" && "bg-[#fb7185] text-black"
+                (isFailed || isAttempted) && phase === "locked" && "bg-danger text-black"
               )}
             >
               {showSolution && (
                 <>
                   {cell.row > 0 && openEdges.has(edgeKey(cell, { row: cell.row - 1, col: cell.col })) && (
-                    <span className="absolute top-1 h-2 w-0.5 bg-[#86efac]" />
+                    <span className="absolute top-1 h-2 w-0.5 bg-success" />
                   )}
                   {cell.row < levelData.size - 1 && openEdges.has(edgeKey(cell, { row: cell.row + 1, col: cell.col })) && (
-                    <span className="absolute bottom-1 h-2 w-0.5 bg-[#86efac]" />
+                    <span className="absolute bottom-1 h-2 w-0.5 bg-success" />
                   )}
                   {cell.col > 0 && openEdges.has(edgeKey(cell, { row: cell.row, col: cell.col - 1 })) && (
-                    <span className="absolute left-1 h-0.5 w-2 bg-[#86efac]" />
+                    <span className="absolute left-1 h-0.5 w-2 bg-success" />
                   )}
                   {cell.col < levelData.size - 1 && openEdges.has(edgeKey(cell, { row: cell.row, col: cell.col + 1 })) && (
-                    <span className="absolute right-1 h-0.5 w-2 bg-[#86efac]" />
+                    <span className="absolute right-1 h-0.5 w-2 bg-success" />
                   )}
                 </>
               )}
@@ -364,7 +364,7 @@ export default function KeyDoorUI({
                 : "bg-transparent text-muted-foreground hover:bg-card hover:text-card-foreground"
             )}
           >
-            <KeyRound className={cn("size-4", selected && "fill-[#ffc516]")} />
+            <KeyRound className={cn("size-4", selected && "fill-arcade")} />
             {option} Key
           </Button>
         );
@@ -379,7 +379,7 @@ export default function KeyDoorUI({
           <p className="font-game text-xl leading-none text-primary sm:text-2xl">
             Route Memory
           </p>
-          <h1 className="mt-3 font-game text-5xl leading-[0.9] text-foreground drop-shadow-[5px_5px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-6xl lg:text-7xl">
+          <h1 className="mt-3 font-game text-5xl leading-[0.9] text-foreground drop-shadow-pop-lg sm:text-6xl lg:text-7xl">
             Lock & Key Memory
           </h1>
           <p className="mt-5 max-w-xl font-inter text-base font-semibold leading-7 text-muted-foreground">
@@ -390,7 +390,7 @@ export default function KeyDoorUI({
             {["Try", "Remember", "Escape"].map((label, index) => (
               <div
                 key={label}
-                className="rounded-md border-2 border-border bg-card p-3 text-center text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]"
+                className="rounded-md border-2 border-border bg-card p-3 text-center text-card-foreground shadow-pop-xs"
               >
                 <p className="font-game text-3xl leading-none text-primary">{index + 1}</p>
                 <p className="mt-1 font-inter text-xs font-black uppercase tracking-wide text-card-foreground">
@@ -403,14 +403,14 @@ export default function KeyDoorUI({
             variant="pixel"
             size="lg"
             onClick={onStart}
-            className="mt-8 h-14 rounded-lg border-4 px-9 font-game text-3xl shadow-[5px_5px_0_0_#8a6200]"
+            className="mt-8 h-14 rounded-lg border-4 px-9 font-game text-3xl shadow-pixel-lg"
           >
             <Sparkles className="size-5" />
             Start Game
           </Button>
         </section>
 
-        <section className="rounded-lg border-4 border-border bg-card p-4 shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]">
+        <section className="rounded-lg border-4 border-border bg-card p-4 shadow-pop-xl">
           <Board
             phase="start"
             levelData={levelData}
@@ -438,10 +438,10 @@ export default function KeyDoorUI({
         hasKey={hasKey}
         keysLeft={keysLeft}
       >
-        <section className="mx-auto grid w-full max-w-3xl gap-4 rounded-lg border-4 border-border bg-card p-5 text-center text-card-foreground shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:grid-cols-3">
+        <section className="mx-auto grid w-full max-w-3xl gap-4 rounded-lg border-4 border-border bg-card p-5 text-center text-card-foreground shadow-pop-xl sm:grid-cols-3">
           <div className="sm:col-span-3">
-            <Trophy className="mx-auto size-10 fill-[#ffc516] text-[#ffc516]" />
-            <h2 className="mt-3 font-game text-4xl leading-none text-card-foreground drop-shadow-[3px_3px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)]">
+            <Trophy className="mx-auto size-10 fill-arcade text-arcade" />
+            <h2 className="mt-3 font-game text-4xl leading-none text-card-foreground drop-shadow-pop-sm">
               All Locks Cleared
             </h2>
           </div>
@@ -477,11 +477,11 @@ export default function KeyDoorUI({
       <section className="mx-auto flex w-full max-w-4xl flex-col gap-4">
         <div
           className={cn(
-            "flex flex-wrap items-center justify-between gap-3 rounded-lg border-4 bg-card p-3 shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]",
+            "flex flex-wrap items-center justify-between gap-3 rounded-lg border-4 bg-card p-3 shadow-pop-md",
             phase === "locked"
-              ? "border-[#881337] text-[#fb7185]"
+              ? "border-danger-ink text-danger"
               : phase === "level-complete"
-                ? "border-[#14532d] text-[#22c55e]"
+                ? "border-success-ink text-success"
                 : "border-border text-card-foreground"
           )}
         >
@@ -495,7 +495,7 @@ export default function KeyDoorUI({
               <Button
                 type="button"
                 onClick={onToggleSolution}
-                className="h-10 rounded-md border-2 border-border bg-card px-3 font-inter text-xs font-black uppercase tracking-wide text-card-foreground hover:bg-[#14532d] hover:text-white"
+                className="h-10 rounded-md border-2 border-border bg-card px-3 font-inter text-xs font-black uppercase tracking-wide text-card-foreground hover:bg-success-ink hover:text-white"
               >
                 {showSolution ? "Hide Solution" : "Show Solution"}
               </Button>

@@ -39,10 +39,10 @@ export default function AccenturePage() {
 
       <section className="mx-auto max-w-6xl px-4 pb-20 pt-12 sm:px-8 lg:px-12">
         <div className="mb-8 flex flex-col gap-3 sm:mb-10">
-          {/* <p className="font-game text-2xl leading-none text-[#f4a01d]">
+          {/* <p className="font-game text-2xl leading-none text-arcade">
             Accenture Games
           </p> */}
-          <h1 className="font-game text-3xl leading-none text-foreground drop-shadow-[4px_4px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-4xl">
+          <h1 className="font-game text-3xl leading-none text-foreground drop-shadow-pop-md sm:text-4xl">
             Explore Games
           </h1>
         </div>

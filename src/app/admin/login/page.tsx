@@ -11,7 +11,7 @@ export default function AdminLoginPage() {
       <section className="mx-auto grid max-w-md gap-6">
         <div>
           <p className="font-game text-2xl leading-none text-primary">Admin</p>
-          <h1 className="mt-3 font-game text-5xl leading-none text-foreground drop-shadow-[4px_4px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)]">
+          <h1 className="mt-3 font-game text-5xl leading-none text-foreground drop-shadow-pop-md">
             Panel Login
           </h1>
         </div>

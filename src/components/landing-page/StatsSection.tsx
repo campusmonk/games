@@ -37,7 +37,7 @@ const StatsSection = () => {
 
       <div className="relative mx-auto max-w-7xl">
         <div className="mx-auto max-w-5xl text-center">
-             <p className="font-game text-4xl leading-none text-foreground drop-shadow-[3px_3px_0_color-mix(in_oklch,var(--background),transparent_15%)] sm:text-4xl lg:text-5xl">
+             <p className="font-game text-4xl leading-none text-foreground drop-shadow-pop-sm sm:text-4xl lg:text-5xl">
          Trusted by Thousands of Learners Nationwide
         </p>
           <div className="mx-auto mt-4 h-0.5 max-w-4xl rounded-full bg-border shadow-[0_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_88%)]" />
@@ -47,9 +47,9 @@ const StatsSection = () => {
           {stats.map((stat) => (
             <article
               key={stat.label}
-              className="group flex min-h-48 items-center gap-5 rounded-lg border-4 border-foreground bg-primary p-5 text-primary-foreground shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_20%)] transition-transform hover:-translate-y-1 sm:min-h-52 sm:p-6 lg:flex-col lg:justify-center lg:text-center"
+              className="group flex min-h-48 items-center gap-5 rounded-lg border-4 border-foreground bg-primary p-5 text-primary-foreground shadow-solid-lg transition-transform hover:-translate-y-1 sm:min-h-52 sm:p-6 lg:flex-col lg:justify-center lg:text-center"
             >
-              <div className="relative flex size-20 shrink-0 items-center justify-center rounded-lg bg-background/75 shadow-[4px_4px_0_0_color-mix(in_oklch,var(--foreground),transparent_15%)] sm:size-24">
+              <div className="relative flex size-20 shrink-0 items-center justify-center rounded-lg bg-background/75 shadow-solid-sm sm:size-24">
                 <Image
                   src={stat.image}
                   alt={stat.alt}

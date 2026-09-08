@@ -25,7 +25,7 @@ export default function Welcome({
           />
         </div>
 
-        <div className="mt-6 max-w-3xl rounded-lg border border-border bg-card px-4 py-3 text-card-foreground shadow-[4px_4px_0_0_color-mix(in_oklch,var(--foreground),transparent_88%)] sm:mt-8 sm:px-5">
+        <div className="mt-6 max-w-3xl rounded-lg border border-border bg-card px-4 py-3 text-card-foreground shadow-pop-sm sm:mt-8 sm:px-5">
           <h1 className="font-game text-2xl leading-none text-card-foreground sm:text-4xl">
             Welcome, and start practicing with cognitive{" "}
             <span className="text-primary">{companyName} Games...</span>

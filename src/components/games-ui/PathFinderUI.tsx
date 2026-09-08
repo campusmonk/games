@@ -74,7 +74,7 @@ function StatPill({
   return (
     <div
       className={cn(
-        "min-w-0 rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:px-4",
+        "min-w-0 rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-pop-xs sm:px-4",
         className
       )}
     >
@@ -99,12 +99,12 @@ function Hud({
       <StatPill label="Level" value={level} />
       <StatPill label="Score" value={score} />
       <StatPill label="Timer" value={formatTime(timeLeft)} />
-      <div className="rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:px-4">
+      <div className="rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-pop-xs sm:px-4">
         <p className="font-inter text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
           Streak
         </p>
         <p className="mt-0.5 flex items-center gap-1 font-game text-2xl leading-none text-primary sm:text-3xl">
-          <Zap className="size-4 fill-[#ffc516]" />
+          <Zap className="size-4 fill-arcade" />
           {streak}
         </p>
       </div>
@@ -130,10 +130,10 @@ function GameShell({
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-5">
       <div className="flex flex-col gap-3 text-center">
-        {/* <p className="font-game text-xl leading-none text-[#f4a01d] sm:text-2xl">
+        {/* <p className="font-game text-xl leading-none text-arcade sm:text-2xl">
           3x3 Block Path Builder
         </p> */}
-        <h1 className="font-game text-4xl leading-none text-foreground drop-shadow-[4px_4px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-5xl lg:text-6xl">
+        <h1 className="font-game text-4xl leading-none text-foreground drop-shadow-pop-md sm:text-5xl lg:text-6xl">
           Path Finder
         </h1>
         <p className="font-inter text-sm font-semibold text-muted-foreground">{phaseLabel}</p>
@@ -148,7 +148,7 @@ function TimerBar({ timeLeft, timeLimit }: Pick<Props, "timeLeft" | "timeLimit">
   const progress = Math.max(0, Math.min(1, timeLeft / timeLimit));
 
   return (
-    <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]">
+    <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-pop-md">
       <div className="flex items-center justify-between gap-3">
         <p className="flex items-center gap-2 font-inter text-xs font-black uppercase tracking-wide text-muted-foreground">
           <Timer className="size-4" />
@@ -160,7 +160,7 @@ function TimerBar({ timeLeft, timeLimit }: Pick<Props, "timeLeft" | "timeLimit">
         <div
           className={cn(
             "h-full transition-all duration-500",
-            progress > 0.5 ? "bg-[#22c55e]" : progress > 0.25 ? "bg-[#ffc516]" : "bg-[#f43f5e]"
+            progress > 0.5 ? "bg-success" : progress > 0.25 ? "bg-arcade" : "bg-danger"
           )}
           style={{ width: `${progress * 100}%` }}
         />
@@ -174,7 +174,7 @@ function SizeSelector({
   onSelectSize,
 }: Pick<Props, "gridSize" | "onSelectSize">) {
   return (
-    <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]">
+    <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-pop-md">
       <p className="font-inter text-[10px] font-black uppercase tracking-wide text-muted-foreground">
         Grid size
       </p>
@@ -188,9 +188,9 @@ function SizeSelector({
               type="button"
               onClick={() => onSelectSize(size)}
               className={cn(
-                "h-10 rounded-md border-2 px-2 font-game text-xl leading-none shadow-[2px_2px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]",
+                "h-10 rounded-md border-2 px-2 font-game text-xl leading-none shadow-pop-2xs",
                 selected
-                  ? "border-[#8a6200] bg-[#ffc516] text-black hover:bg-[#ffd84d]"
+                  ? "border-arcade-ink bg-arcade text-black hover:bg-[#ffd84d]"
                   : "border-border bg-card text-card-foreground hover:bg-primary hover:text-primary-foreground"
               )}
             >
@@ -248,7 +248,7 @@ function BoardView({
 
       <div
         className={cn(
-          "grid aspect-square overflow-hidden border-[3px] border-border bg-background shadow-[6px_6px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]",
+          "grid aspect-square overflow-hidden border-[3px] border-border bg-background shadow-pop-lg",
           phase === "failed" && "animate-[grid-shake_0.38s_ease-in-out]"
         )}
         style={{ gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))` }}
@@ -277,12 +277,12 @@ function BoardView({
                   cell.type === "path"
                     ? "bg-card text-card-foreground"
                     : "bg-muted text-transparent",
-                  isTraced && cell.type === "path" && phase !== "playing" && "bg-[#14532d] text-[#bbf7d0]",
-                  isSelected && "z-10 ring-[3px] ring-inset ring-[#ffc516]",
-                  isSelected && blockTop && "border-t-[#ffc516]",
-                  isSelected && blockRight && "border-r-[#ffc516]",
-                  isSelected && blockBottom && "border-b-[#ffc516]",
-                  isSelected && blockLeft && "border-l-[#ffc516]",
+                  isTraced && cell.type === "path" && phase !== "playing" && "bg-success-ink text-[#bbf7d0]",
+                  isSelected && "z-10 ring-[3px] ring-inset ring-arcade",
+                  isSelected && blockTop && "border-t-arcade",
+                  isSelected && blockRight && "border-r-arcade",
+                  isSelected && blockBottom && "border-b-arcade",
+                  isSelected && blockLeft && "border-l-arcade",
                   phase === "playing" && "hover:z-20 hover:ring-2 hover:ring-inset hover:ring-ring/70"
                 )}
                 aria-label={`Select 3x3 block ${Math.floor(rowIndex / 3) + 1}, ${Math.floor(colIndex / 3) + 1}`}
@@ -295,7 +295,7 @@ function BoardView({
                 {isRocket && (
                   <Rocket
                     aria-label="Rocket moving on route"
-                    className="absolute h-[42%] w-[42%] text-[#ffc516] drop-shadow-[0_0_8px_rgba(255,255,255,0.45)] sm:h-[50%] sm:w-[50%]"
+                    className="absolute h-[42%] w-[42%] text-arcade drop-shadow-[0_0_8px_rgba(255,255,255,0.45)] sm:h-[50%] sm:w-[50%]"
                     strokeWidth={2.8}
                   />
                 )}
@@ -314,7 +314,7 @@ function BoardView({
             {row === exitRow && (
               <MapPin
                 aria-label="Destination location"
-                className="h-5 w-5 text-[#22c55e] drop-shadow-[0_0_8px_rgba(34,197,94,0.45)] sm:h-9 sm:w-9"
+                className="h-5 w-5 text-success drop-shadow-[0_0_8px_rgba(34,197,94,0.45)] sm:h-9 sm:w-9"
                 strokeWidth={2.6}
               />
             )}
@@ -342,7 +342,7 @@ function ControlButton({
       disabled={disabled}
       onClick={onClick}
       title={title}
-      className="h-14 rounded-lg border-4 border-border bg-card px-4 font-game text-2xl text-card-foreground shadow-[4px_4px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] hover:bg-primary hover:text-primary-foreground disabled:opacity-45"
+      className="h-14 rounded-lg border-4 border-border bg-card px-4 font-game text-2xl text-card-foreground shadow-pop-sm hover:bg-primary hover:text-primary-foreground disabled:opacity-45"
     >
       {children}
     </Button>
@@ -382,11 +382,11 @@ function ControlPanel({
   return (
     <div
       className={cn(
-        "rounded-lg border-4 bg-card p-4 text-card-foreground shadow-[6px_6px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]",
+        "rounded-lg border-4 bg-card p-4 text-card-foreground shadow-pop-lg",
         phase === "failed"
-          ? "border-[#881337]"
+          ? "border-danger-ink"
           : phase === "animating"
-            ? "border-[#14532d]"
+            ? "border-success-ink"
             : "border-border"
       )}
     >
@@ -396,9 +396,9 @@ function ControlPanel({
             className={cn(
               "font-game text-3xl leading-none",
               phase === "failed"
-                ? "text-[#fb7185]"
+                ? "text-danger"
                 : phase === "animating"
-                  ? "text-[#22c55e]"
+                  ? "text-success"
                   : "text-card-foreground"
             )}
           >
@@ -454,10 +454,10 @@ function ResultScreen({
       streak={streak}
       timeLeft={0}
     >
-      <section className="mx-auto grid w-full max-w-3xl gap-4 rounded-lg border-4 border-border bg-card p-5 text-center text-card-foreground shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:grid-cols-3">
+      <section className="mx-auto grid w-full max-w-3xl gap-4 rounded-lg border-4 border-border bg-card p-5 text-center text-card-foreground shadow-pop-xl sm:grid-cols-3">
         <div className="sm:col-span-3">
-          <Trophy className="mx-auto size-10 fill-[#ffc516] text-[#ffc516]" />
-          <h2 className="mt-3 font-game text-4xl leading-none text-card-foreground drop-shadow-[3px_3px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)]">
+          <Trophy className="mx-auto size-10 fill-arcade text-arcade" />
+          <h2 className="mt-3 font-game text-4xl leading-none text-card-foreground drop-shadow-pop-sm">
             Routes Complete
           </h2>
         </div>
@@ -515,7 +515,7 @@ export default function PathFinderUI({
           <p className="font-game text-xl leading-none text-primary sm:text-2xl">
             Blocks + Routes
           </p>
-          <h1 className="mt-3 font-game text-5xl leading-[0.9] text-foreground drop-shadow-[5px_5px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-6xl lg:text-7xl">
+          <h1 className="mt-3 font-game text-5xl leading-[0.9] text-foreground drop-shadow-pop-lg sm:text-6xl lg:text-7xl">
             Path Finder
           </h1>
           <p className="mt-5 max-w-xl font-inter text-base font-semibold leading-7 text-muted-foreground">
@@ -525,7 +525,7 @@ export default function PathFinderUI({
             {["Select", "Rotate", "Launch"].map((label, index) => (
               <div
                 key={label}
-                className="rounded-md border-2 border-border bg-card p-3 text-center text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]"
+                className="rounded-md border-2 border-border bg-card p-3 text-center text-card-foreground shadow-pop-xs"
               >
                 <p className="font-game text-3xl leading-none text-primary">{index + 1}</p>
                 <p className="mt-1 font-inter text-xs font-black uppercase tracking-wide text-card-foreground">
@@ -538,14 +538,14 @@ export default function PathFinderUI({
             variant="pixel"
             size="lg"
             onClick={onStart}
-            className="mt-8 h-14 rounded-lg border-4 px-9 font-game text-3xl shadow-[5px_5px_0_0_#8a6200]"
+            className="mt-8 h-14 rounded-lg border-4 px-9 font-game text-3xl shadow-pixel-lg"
           >
             <Sparkles className="size-5" />
             Start Game
           </Button>
         </section>
 
-        <section className="rounded-lg border-4 border-border bg-card p-4 shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]">
+        <section className="rounded-lg border-4 border-border bg-card p-4 shadow-pop-xl">
           <div className="mb-4 grid grid-cols-[1fr_auto] items-center gap-3">
             <div>
               <p className="font-inter text-[10px] font-black uppercase tracking-wide text-muted-foreground">
@@ -555,7 +555,7 @@ export default function PathFinderUI({
                 Launch to Location
               </p>
             </div>
-            <div className="flex items-center gap-2 text-[#ffc516]">
+            <div className="flex items-center gap-2 text-arcade">
               {/* <Rocket className="size-7" />
               <MapPin className="size-7" /> */}
             </div>
@@ -596,7 +596,7 @@ export default function PathFinderUI({
     >
       <section className="mx-auto flex w-full max-w-4xl flex-col gap-4">
         <div className="grid gap-4 lg:grid-cols-[1fr_260px_240px]">
-          <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]">
+          <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-pop-md">
             <p className="font-inter text-[10px] font-black uppercase tracking-wide text-muted-foreground">
               Objective
             </p>
@@ -608,7 +608,7 @@ export default function PathFinderUI({
           <TimerBar timeLeft={timeLeft} timeLimit={timeLimit} />
         </div>
 
-        <div className="rounded-lg border-4 border-border bg-card p-4 shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]">
+        <div className="rounded-lg border-4 border-border bg-card p-4 shadow-pop-xl">
           <BoardView
             board={board}
             selectedBlock={selectedBlock}

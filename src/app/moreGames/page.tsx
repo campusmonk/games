@@ -35,7 +35,7 @@ export default function MoreGamesPage() {
             <p className="font-game text-xl leading-none text-primary sm:text-2xl">
               Practice Hub
             </p>
-            <h1 className="mt-4 font-game text-4xl leading-none text-foreground drop-shadow-[4px_4px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-6xl">
+            <h1 className="mt-4 font-game text-4xl leading-none text-foreground drop-shadow-pop-md sm:text-6xl">
               More Games
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
@@ -59,7 +59,7 @@ export default function MoreGamesPage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-8 sm:pt-12 lg:px-12">
-        <div className="mb-8 rounded-lg border border-primary/30 bg-primary/10 px-5 py-4 text-foreground shadow-[4px_4px_0_0_color-mix(in_oklch,var(--foreground),transparent_90%)] sm:mb-10 sm:flex sm:items-center sm:gap-4">
+        <div className="mb-8 rounded-lg border border-primary/30 bg-primary/10 px-5 py-4 text-foreground shadow-pop-sm sm:mb-10 sm:flex sm:items-center sm:gap-4">
           <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-primary text-primary-foreground sm:mb-0">
             <Sparkles className="h-5 w-5" aria-hidden="true" />
           </span>
@@ -75,7 +75,7 @@ export default function MoreGamesPage() {
         </div>
 
         <div className="mb-6">
-          <h2 className="font-game text-3xl leading-none text-foreground drop-shadow-[4px_4px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-4xl">
+          <h2 className="font-game text-3xl leading-none text-foreground drop-shadow-pop-md sm:text-4xl">
             Explore These Games
           </h2>
         </div>

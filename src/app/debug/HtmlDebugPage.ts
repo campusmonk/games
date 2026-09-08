@@ -71,6 +71,13 @@ const debugFrameStyles = `
     background: #ffffff;
   }
 
+  /* The base stylesheet hardcodes .lang{color:#fff}, so giving it a white
+     background above left white text on white. Set the text and border too. */
+  :root[data-theme="light"] .lang {
+    color: #111827;
+    border-color: #cbd5e1;
+  }
+
   :root[data-theme="light"] .qbtn.active,
   :root[data-theme="light"] .pill,
   :root[data-theme="light"] .lockbtn.is-locked {

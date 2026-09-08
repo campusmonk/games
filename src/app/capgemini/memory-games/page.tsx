@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function MemoryGamesPage() {
   return (
     <main className="min-h-screen bg-background px-4 pb-16 pt-24 text-foreground sm:px-8 lg:px-12">
-      <section className="mx-auto max-w-3xl rounded-lg border border-border bg-card p-6 text-card-foreground shadow-[6px_6px_0_0_color-mix(in_oklch,var(--foreground),transparent_88%)] sm:p-8">
+      <section className="mx-auto max-w-3xl rounded-lg border border-border bg-card p-6 text-card-foreground shadow-pop-lg sm:p-8">
         <p className="font-game text-xl leading-none text-primary">
           Capgemini Game
         </p>

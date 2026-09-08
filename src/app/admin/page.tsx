@@ -45,7 +45,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
         <div className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="font-game text-2xl leading-none text-primary">Admin Panel</p>
-            <h1 className="mt-3 font-game text-5xl leading-none text-foreground drop-shadow-[4px_4px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)]">
+            <h1 className="mt-3 font-game text-5xl leading-none text-foreground drop-shadow-pop-md">
               Allowed Users
             </h1>
           </div>
@@ -58,7 +58,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
         </div>
 
         <div className="mt-8 grid gap-5 lg:grid-cols-[280px_1fr]">
-          <aside className="rounded-lg border border-border bg-card p-5 text-card-foreground shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_90%)]">
+          <aside className="rounded-lg border border-border bg-card p-5 text-card-foreground shadow-pop-md">
             <p className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Total Users</p>
             <p className="mt-3 font-game text-6xl leading-none text-primary">{total}</p>
 
@@ -89,7 +89,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
             ) : null}
           </aside>
 
-          <section className="rounded-lg border border-border bg-card p-5 text-card-foreground shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_90%)]">
+          <section className="rounded-lg border border-border bg-card p-5 text-card-foreground shadow-pop-md">
             {storageMessage ? (
               <div className="mb-5 rounded-md border border-primary/35 bg-primary/10 px-4 py-3 text-sm text-foreground">
                 {storageMessage}

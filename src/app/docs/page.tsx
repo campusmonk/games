@@ -181,11 +181,11 @@ export default function DocsPage() {
       <section className="mx-auto max-w-7xl">
         <div className="grid gap-8 lg:grid-cols-[1fr_22rem] lg:items-end">
           <div className="max-w-4xl">
-          <p className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 font-inter text-sm font-semibold uppercase tracking-[0.16em] text-muted-foreground shadow-[4px_4px_0_0_color-mix(in_oklch,var(--foreground),transparent_88%)]">
+          <p className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 font-inter text-sm font-semibold uppercase tracking-[0.16em] text-muted-foreground shadow-pop-sm">
             <BookOpenCheck className="size-4 text-primary" aria-hidden="true" />
             Campus Monk Docs
           </p>
-          <h1 className="mt-5 font-game text-5xl leading-none text-foreground drop-shadow-[5px_5px_0_color-mix(in_oklch,var(--background),var(--foreground)_14%)] sm:text-6xl lg:text-7xl">
+          <h1 className="mt-5 font-game text-5xl leading-none text-foreground drop-shadow-pop-lg sm:text-6xl lg:text-7xl">
             Company Cognitive Games Guide
           </h1>
           <p className="mt-6 max-w-3xl font-inter text-base leading-8 text-muted-foreground sm:text-lg">
@@ -195,7 +195,7 @@ export default function DocsPage() {
           </p>
           </div>
 
-          <div className="rounded-lg border-4 border-foreground bg-primary p-5 text-primary-foreground shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_18%)]">
+          <div className="rounded-lg border-4 border-foreground bg-primary p-5 text-primary-foreground shadow-solid-lg">
             <Sparkles className="size-7" aria-hidden="true" />
             <p className="mt-4 font-game text-4xl leading-none">13 Practice Notes</p>
             <p className="mt-3 font-inter text-sm font-semibold leading-6 text-primary-foreground/80">
@@ -210,7 +210,7 @@ export default function DocsPage() {
             <a
               key={company.name}
               href={`#${company.name.toLowerCase()}`}
-              className="rounded-lg border border-border bg-card p-5 text-card-foreground shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_90%)] transition-all hover:-translate-y-1 hover:border-primary hover:shadow-[7px_7px_0_0_color-mix(in_oklch,var(--primary),transparent_28%)]"
+              className="rounded-lg border border-border bg-card p-5 text-card-foreground shadow-pop-md transition-all hover:-translate-y-1 hover:border-primary hover:shadow-primary-lg"
             >
               <Building2 className="size-6 text-primary" aria-hidden="true" />
               <h2 className="mt-4 font-game text-3xl leading-none text-card-foreground">
@@ -254,7 +254,7 @@ export default function DocsPage() {
               {company.games.map((game) => (
                 <div
                   key={`${company.name}-${game.title}`}
-                  className="rounded-lg border border-border bg-card p-5 text-card-foreground shadow-[6px_6px_0_0_color-mix(in_oklch,var(--foreground),transparent_90%)] sm:p-6"
+                  className="rounded-lg border border-border bg-card p-5 text-card-foreground shadow-pop-lg sm:p-6"
                 >
                   <div className="flex items-start gap-4">
                     <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-md border border-border bg-secondary text-primary">
@@ -295,7 +295,7 @@ export default function DocsPage() {
                     {game.href ? (
                       <Link
                         href={game.href}
-                        className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-primary px-4 py-2.5 font-inter text-sm font-bold text-primary-foreground shadow-[4px_4px_0_0_color-mix(in_oklch,var(--foreground),transparent_20%)] transition-transform hover:translate-x-0.5 hover:translate-y-0.5"
+                        className="inline-flex items-center gap-2 rounded-md border-2 border-foreground bg-primary px-4 py-2.5 font-inter text-sm font-bold text-primary-foreground shadow-solid-sm transition-transform hover:translate-x-0.5 hover:translate-y-0.5"
                       >
                         Play practice
                         <ArrowRight className="size-4" aria-hidden="true" />

@@ -220,11 +220,11 @@ function NumbersRow({
           if (!isAnswered) {
             cls += "bg-card border-border text-card-foreground cursor-pointer hover:bg-muted hover:border-ring hover:-translate-y-0.5";
           } else if (isSelected && isCorrect) {
-            cls += "bg-[#86efac] border-[#16a34a] text-[#14532d] cursor-default";
+            cls += "bg-success/35 border-success text-success-ink cursor-default";
           } else if (isSelected && !isCorrect) {
-            cls += "bg-[#fca5a5] border-[#dc2626] text-[#7f1d1d] cursor-default";
+            cls += "bg-danger/30 border-danger text-danger-ink cursor-default";
           } else if (!isSelected && isRight && isAnswered) {
-            cls += "bg-[#d1fae5] border-[#16a34a] text-[#14532d] cursor-default";
+            cls += "bg-success/20 border-success text-success-ink cursor-default";
           } else {
             cls += "bg-muted border-border text-muted-foreground opacity-60 cursor-default";
           }

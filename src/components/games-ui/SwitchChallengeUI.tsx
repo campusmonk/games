@@ -42,7 +42,7 @@ function StatPill({
   return (
     <div
       className={cn(
-        "min-w-0 rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:px-4",
+        "min-w-0 rounded-md border-2 border-border bg-card px-3 py-2 text-card-foreground shadow-pop-xs sm:px-4",
         className
       )}
     >
@@ -66,8 +66,8 @@ function Hud({
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       <StatPill label="Level" value={level} />
       <StatPill label="Session" value={timer} />
-      <StatPill label="Correct" value={correct} className="border-[#14532d]" />
-      <StatPill label="Wrong" value={wrong} className="border-[#881337]" />
+      <StatPill label="Correct" value={correct} className="border-success-ink" />
+      <StatPill label="Wrong" value={wrong} className="border-danger-ink" />
     </div>
   );
 }
@@ -93,7 +93,7 @@ function GameShell({
         <p className="font-game text-xl leading-none text-primary sm:text-2xl">
           Capgemini Game
         </p>
-        <h1 className="font-game text-4xl leading-none text-foreground drop-shadow-[4px_4px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-5xl lg:text-6xl">
+        <h1 className="font-game text-4xl leading-none text-foreground drop-shadow-pop-md sm:text-5xl lg:text-6xl">
           Switch Challenge
         </h1>
         <p className="font-inter text-sm font-semibold text-muted-foreground">{phaseLabel}</p>
@@ -108,7 +108,7 @@ function TimerBar({ timeLeft, timeLimit }: Pick<Props, "timeLeft" | "timeLimit">
   const progress = Math.max(0, timeLeft / timeLimit);
 
   return (
-    <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]">
+    <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-pop-md">
       <div className="flex items-center justify-between gap-3">
         <p className="flex items-center gap-2 font-inter text-xs font-black uppercase tracking-wide text-muted-foreground">
           <Timer className="size-4" />
@@ -117,7 +117,7 @@ function TimerBar({ timeLeft, timeLimit }: Pick<Props, "timeLeft" | "timeLimit">
         <p
           className={cn(
             "font-game text-3xl leading-none",
-            timeLeft <= 5 ? "text-[#fb7185]" : "text-[#ffc516]"
+            timeLeft <= 5 ? "text-danger" : "text-arcade"
           )}
         >
           {timeLeft}s
@@ -127,7 +127,7 @@ function TimerBar({ timeLeft, timeLimit }: Pick<Props, "timeLeft" | "timeLimit">
         <div
           className={cn(
             "h-full transition-all duration-500",
-            progress > 0.5 ? "bg-[#22c55e]" : progress > 0.25 ? "bg-[#ffc516]" : "bg-[#f43f5e]"
+            progress > 0.5 ? "bg-success" : progress > 0.25 ? "bg-arcade" : "bg-danger"
           )}
           style={{ width: `${progress * 100}%` }}
         />
@@ -167,9 +167,9 @@ function PuzzleCard({
   return (
     <div
       className={cn(
-        "rounded-lg border-4 border-border bg-card p-5 text-card-foreground shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] transition sm:p-7",
-        isAnswered && isCorrect && "border-[#14532d]",
-        isAnswered && isCorrect === false && "border-[#881337] animate-[grid-shake_0.38s_ease-in-out]"
+        "rounded-lg border-4 border-border bg-card p-5 text-card-foreground shadow-pop-xl transition sm:p-7",
+        isAnswered && isCorrect && "border-success-ink",
+        isAnswered && isCorrect === false && "border-danger-ink animate-[grid-shake_0.38s_ease-in-out]"
       )}
     >
       <div className="grid gap-5">
@@ -182,7 +182,7 @@ function PuzzleCard({
             <p className="font-inter text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground">
               Known Operator
             </p>
-            <p className="font-inter text-3xl font-black leading-none text-[#ffc516]">
+            <p className="font-inter text-3xl font-black leading-none text-arcade">
               {puzzle.operators[0]}
             </p>
           </div>
@@ -202,7 +202,7 @@ function OptionsGrid({
   if (!puzzle) return null;
 
   return (
-    <div className="rounded-lg border-4 border-border bg-card p-5 text-card-foreground shadow-[6px_6px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:p-7">
+    <div className="rounded-lg border-4 border-border bg-card p-5 text-card-foreground shadow-pop-lg sm:p-7">
       <p className="mb-6 text-center font-inter text-2xl font-black leading-tight text-muted-foreground sm:text-3xl">
         Which operator produces this output?
       </p>
@@ -220,8 +220,8 @@ function OptionsGrid({
                 "flex min-h-24 items-center justify-center rounded-[26px] border-2 px-4 text-center shadow-[inset_0_0_0_1px_rgba(0,0,0,0.22)] transition sm:min-h-28",
                 !isAnswered && "border-border bg-background text-foreground hover:-translate-y-0.5 hover:border-ring hover:bg-muted",
                 isAnswered && "border-border bg-muted text-muted-foreground/40",
-                isSelected && isCorrect && "border-[#14532d] bg-[#22c55e] text-black",
-                isSelected && isCorrect === false && "border-[#881337] bg-[#fb7185] text-black"
+                isSelected && isCorrect && "border-success-ink bg-success text-black",
+                isSelected && isCorrect === false && "border-danger-ink bg-danger text-black"
               )}
             >
               <span className="font-inter text-2xl font-black leading-none sm:text-3xl">
@@ -237,7 +237,7 @@ function OptionsGrid({
 
 function PreviewBoard() {
   return (
-    <section className="mx-auto w-full max-w-xl rounded-lg border-4 border-border bg-card p-3 shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:p-4">
+    <section className="mx-auto w-full max-w-xl rounded-lg border-4 border-border bg-card p-3 shadow-pop-xl sm:p-4">
       <div className="flex flex-col gap-5 rounded-md border-2 border-border bg-background p-4 sm:gap-6 sm:p-5">
         <div className="grid gap-4 sm:grid-cols-2">
           <SymbolRow label="Input" value="C H E F" />
@@ -284,7 +284,7 @@ export default function SwitchChallengeUI({
           <p className="font-game text-xl leading-none text-primary sm:text-2xl">
             Positions + Pattern
           </p>
-          <h1 className="mt-3 font-game text-5xl leading-[0.9] text-foreground drop-shadow-[5px_5px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)] sm:text-6xl lg:text-7xl">
+          <h1 className="mt-3 font-game text-5xl leading-[0.9] text-foreground drop-shadow-pop-lg sm:text-6xl lg:text-7xl">
             Switch Challenge
           </h1>
           <p className="mt-5 max-w-xl font-inter text-base font-semibold leading-7 text-muted-foreground">
@@ -294,7 +294,7 @@ export default function SwitchChallengeUI({
             {["Read", "Map", "Choose"].map((label, index) => (
               <div
                 key={label}
-                className="rounded-md border-2 border-border bg-card p-3 text-center text-card-foreground shadow-[3px_3px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]"
+                className="rounded-md border-2 border-border bg-card p-3 text-center text-card-foreground shadow-pop-xs"
               >
                 <p className="font-game text-3xl leading-none text-primary">{index + 1}</p>
                 <p className="mt-1 font-inter text-xs font-black uppercase tracking-wide text-card-foreground">
@@ -307,7 +307,7 @@ export default function SwitchChallengeUI({
             variant="pixel"
             size="lg"
             onClick={onStart}
-            className="mt-8 h-14 rounded-lg border-4 px-9 font-game text-3xl shadow-[5px_5px_0_0_#8a6200]"
+            className="mt-8 h-14 rounded-lg border-4 px-9 font-game text-3xl shadow-pixel-lg"
           >
             <Sparkles className="size-5" />
             Start Game
@@ -328,15 +328,15 @@ export default function SwitchChallengeUI({
         correct={correct}
         wrong={wrong}
       >
-        <section className="mx-auto grid w-full max-w-3xl gap-4 rounded-lg border-4 border-border bg-card p-5 text-center text-card-foreground shadow-[7px_7px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)] sm:grid-cols-2">
+        <section className="mx-auto grid w-full max-w-3xl gap-4 rounded-lg border-4 border-border bg-card p-5 text-center text-card-foreground shadow-pop-xl sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <Trophy className="mx-auto size-10 fill-[#ffc516] text-[#ffc516]" />
-            <h2 className="mt-3 font-game text-4xl leading-none text-card-foreground drop-shadow-[3px_3px_0_color-mix(in_oklch,var(--background),var(--foreground)_12%)]">
+            <Trophy className="mx-auto size-10 fill-arcade text-arcade" />
+            <h2 className="mt-3 font-game text-4xl leading-none text-card-foreground drop-shadow-pop-sm">
               Results
             </h2>
           </div>
-          <StatPill label="Correct" value={correct} className="border-[#14532d]" />
-          <StatPill label="Wrong" value={wrong} className="border-[#881337]" />
+          <StatPill label="Correct" value={correct} className="border-success-ink" />
+          <StatPill label="Wrong" value={wrong} className="border-danger-ink" />
           <Button
             variant="pixel"
             size="lg"
@@ -381,12 +381,12 @@ export default function SwitchChallengeUI({
     >
       <section className="mx-auto grid w-full max-w-4xl gap-4">
         <div className="grid gap-4 lg:grid-cols-[1fr_240px]">
-          <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]">
+          <div className="rounded-lg border-4 border-border bg-card p-3 text-card-foreground shadow-pop-md">
             <p className="font-inter text-[10px] font-black uppercase tracking-wide text-muted-foreground">
               Challenge
             </p>
-            <div className="mt-2 flex items-center gap-3 font-game text-2xl leading-none text-[#ffc516] sm:text-3xl">
-              <Zap className="size-5 fill-[#ffc516]" />
+            <div className="mt-2 flex items-center gap-3 font-game text-2xl leading-none text-arcade sm:text-3xl">
+              <Zap className="size-5 fill-arcade" />
               {puzzle.layers === 2 ? "Two Layer Switch" : "Single Switch"}
             </div>
           </div>
@@ -396,10 +396,10 @@ export default function SwitchChallengeUI({
         {isAnswered && (
           <div
             className={cn(
-              "flex items-center justify-center gap-2 rounded-lg border-4 bg-card p-3 font-inter text-sm font-black shadow-[5px_5px_0_0_color-mix(in_oklch,var(--foreground),transparent_82%)]",
+              "flex items-center justify-center gap-2 rounded-lg border-4 bg-card p-3 font-inter text-sm font-black shadow-pop-md",
               isCorrect
-                ? "border-[#14532d] text-[#22c55e]"
-                : "border-[#881337] text-[#fb7185]"
+                ? "border-success-ink text-success"
+                : "border-danger-ink text-danger"
             )}
           >
             {isCorrect ? <CheckCircle2 className="size-5" /> : <XCircle className="size-5" />}

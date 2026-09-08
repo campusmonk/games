@@ -16,7 +16,7 @@ type GameCardProps = {
 const GameCard = ({ game }: GameCardProps) => {
   return (
     <Link href={game.href} className="group block h-full">
-      <Card className="h-full gap-0 rounded-xl border border-border bg-card py-0 text-card-foreground shadow-[6px_6px_0_0_color-mix(in_oklch,var(--foreground),transparent_85%)] ring-0 transition-transform duration-200 hover:shadow-[8px_8px_0_0_color-mix(in_oklch,var(--primary),transparent_35%)]">
+      <Card className="h-full gap-0 rounded-xl border border-border bg-card py-0 text-card-foreground shadow-pop-lg ring-0 transition-transform duration-200 hover:shadow-primary-xl">
         <CardHeader className="px-4 pt-4 pb-0">
           <div className="flex min-h-14 items-center justify-between gap-4">
             <CardTitle className="font-game text-2xl leading-none text-card-foreground sm:text-3xl">
