@@ -14,6 +14,7 @@ export default function DailyLimitReached({ status }: DailyLimitReachedProps) {
     game: "plays for this game",
     communication: "attempts for this communication round",
     debug: "attempts for this debug assessment",
+    quiz: "attempts for this quiz",
   } satisfies Record<DailyLimitStatus["kind"], string>;
   const label = labelByKind[status.kind];
   const hasStorageError = Boolean(status.storageError);

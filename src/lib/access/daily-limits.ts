@@ -6,7 +6,7 @@ import path from "path";
 import { requireUserAccess } from "./allowlist";
 import { invalidateMemo, memoize, memoTtlMs } from "./memo";
 
-export type DailyLimitKind = "game" | "communication" | "debug";
+export type DailyLimitKind = "game" | "communication" | "debug" | "quiz";
 
 export type DailyLimitStatus = {
   allowed: boolean;
@@ -42,6 +42,7 @@ export type GlobalDailyLimits = {
   gamesPerDay: number | null;
   communicationPerDay: number | null;
   debugPerDay: number | null;
+  quizPerDay: number | null;
 };
 
 type LimitSettingsFile = {
@@ -57,12 +58,21 @@ const defaultLimits: GlobalDailyLimits = {
   gamesPerDay: null,
   communicationPerDay: null,
   debugPerDay: null,
+  quizPerDay: null,
 };
 const quotaWindowMs = 24 * 60 * 60 * 1000;
 const perGameSupabaseSetupMessage =
-  "Daily limits need a Supabase schema update. Run data/supabase-daily-limits.sql in Supabase SQL editor so each game, communication round, and debug assessment can have its own daily attempt count.";
-const debugSupabaseSetupMessage =
-  "Debug assessment limits need a Supabase schema update. Run data/supabase-daily-limits.sql in Supabase SQL editor, then reload the admin page.";
+  "Daily limits need a Supabase schema update. Run data/supabase-daily-limits.sql in Supabase SQL editor so each game, communication round, debug assessment, and quiz can have its own daily attempt count.";
+// Columns added after the first release: an older Supabase schema still
+// answers for the original ones, so a missing column is recoverable.
+const optionalLimitColumns = ["debug_per_day", "quiz_per_day"] as const;
+const requiredLimitColumns = ["games_per_day", "communication_per_day"] as const;
+const supabaseSetupMessageByColumn: Record<(typeof optionalLimitColumns)[number], string> = {
+  debug_per_day:
+    "Debug assessment limits need a Supabase schema update. Run data/supabase-daily-limits.sql in Supabase SQL editor, then reload the admin page.",
+  quiz_per_day:
+    "Quiz limits need a Supabase schema update. Run data/supabase-daily-limits.sql in Supabase SQL editor, then reload the admin page.",
+};
 
 function getDateKey(date = new Date()) {
   return date.toISOString().slice(0, 10);
@@ -181,6 +191,7 @@ export async function getGlobalDailyLimits(): Promise<GlobalDailyLimits> {
         gamesPerDay: normalizeLimit(parsed.limits?.gamesPerDay),
         communicationPerDay: normalizeLimit(parsed.limits?.communicationPerDay),
         debugPerDay: normalizeLimit(parsed.limits?.debugPerDay),
+        quizPerDay: normalizeLimit(parsed.limits?.quizPerDay),
       };
     } catch {
       return defaultLimits;
@@ -194,6 +205,7 @@ async function writeGlobalDailyLimits(limits: GlobalDailyLimits) {
       games_per_day: limits.gamesPerDay,
       communication_per_day: limits.communicationPerDay,
       debug_per_day: limits.debugPerDay,
+      quiz_per_day: limits.quizPerDay,
     });
     return;
   }
@@ -211,6 +223,7 @@ export async function updateGlobalDailyLimit(kind: DailyLimitKind, value: FormDa
     game: "gamesPerDay",
     communication: "communicationPerDay",
     debug: "debugPerDay",
+    quiz: "quizPerDay",
   };
   const nextLimits = {
     ...currentLimits,
@@ -223,6 +236,7 @@ export async function updateGlobalDailyLimit(kind: DailyLimitKind, value: FormDa
         game: "games_per_day",
         communication: "communication_per_day",
         debug: "debug_per_day",
+        quiz: "quiz_per_day",
       };
 
       await writeSupabaseGlobalDailyLimits({
@@ -234,7 +248,9 @@ export async function updateGlobalDailyLimit(kind: DailyLimitKind, value: FormDa
   } catch (error) {
     const detail = error instanceof Error ? error.message : "Unknown storage error.";
 
-    return { ok: false, message: detail.includes(debugSupabaseSetupMessage) ? detail : `Could not update the daily limit. ${detail}` };
+    const isSetupMessage = Object.values(supabaseSetupMessageByColumn).some((message) => detail.includes(message));
+
+    return { ok: false, message: isSetupMessage ? detail : `Could not update the daily limit. ${detail}` };
   }
 
   invalidateMemo("limits:");
@@ -245,6 +261,7 @@ export async function updateGlobalDailyLimit(kind: DailyLimitKind, value: FormDa
 function getLimitForKind(limits: GlobalDailyLimits, kind: DailyLimitKind) {
   if (kind === "communication") return limits.communicationPerDay;
   if (kind === "debug") return limits.debugPerDay;
+  if (kind === "quiz") return limits.quizPerDay;
 
   return limits.gamesPerDay;
 }
@@ -316,37 +333,21 @@ function isSupabaseCheckConstraintError(error: unknown) {
   return error instanceof Error && error.message.includes("violates check constraint");
 }
 
-function isMissingSupabaseDebugColumnError(error: unknown) {
-  return error instanceof Error && error.message.includes("debug_per_day");
+function getMissingSupabaseLimitColumn(error: unknown) {
+  if (!(error instanceof Error)) return null;
+
+  return optionalLimitColumns.find((column) => error.message.includes(column)) || null;
 }
 
 async function readSupabaseGlobalDailyLimits(): Promise<GlobalDailyLimits> {
-  try {
-    const rows = await supabaseRequest<Array<{
-      games_per_day?: number | null;
-      communication_per_day?: number | null;
-      debug_per_day?: number | null;
-    }>>(
-      `${limitSettingsSupabaseTable}?select=games_per_day,communication_per_day,debug_per_day&id=eq.${limitSettingsSupabaseId}&limit=1`,
-    );
-    const settings = rows[0];
+  let columns: string[] = [...requiredLimitColumns, ...optionalLimitColumns];
 
-    if (!settings) return defaultLimits;
-
-    return {
-      gamesPerDay: normalizeLimit(settings.games_per_day),
-      communicationPerDay: normalizeLimit(settings.communication_per_day),
-      debugPerDay: normalizeLimit(settings.debug_per_day),
-    };
-  } catch (error) {
-    if (!isMissingSupabaseDebugColumnError(error)) return defaultLimits;
-
+  // A schema that predates a column answers the select with an error naming
+  // it, so drop that column and ask again instead of losing every limit.
+  for (let attempt = 0; attempt <= optionalLimitColumns.length; attempt += 1) {
     try {
-      const rows = await supabaseRequest<Array<{
-        games_per_day?: number | null;
-        communication_per_day?: number | null;
-      }>>(
-        `${limitSettingsSupabaseTable}?select=games_per_day,communication_per_day&id=eq.${limitSettingsSupabaseId}&limit=1`,
+      const rows = await supabaseRequest<Array<Record<string, number | null | undefined>>>(
+        `${limitSettingsSupabaseTable}?select=${columns.join(",")}&id=eq.${limitSettingsSupabaseId}&limit=1`,
       );
       const settings = rows[0];
 
@@ -355,35 +356,38 @@ async function readSupabaseGlobalDailyLimits(): Promise<GlobalDailyLimits> {
       return {
         gamesPerDay: normalizeLimit(settings.games_per_day),
         communicationPerDay: normalizeLimit(settings.communication_per_day),
-        debugPerDay: null,
+        debugPerDay: normalizeLimit(settings.debug_per_day),
+        quizPerDay: normalizeLimit(settings.quiz_per_day),
       };
-    } catch {
-      return defaultLimits;
+    } catch (error) {
+      const missingColumn = getMissingSupabaseLimitColumn(error);
+      if (!missingColumn) return defaultLimits;
+
+      columns = columns.filter((column) => column !== missingColumn);
     }
   }
+
+  return defaultLimits;
 }
 
 async function writeSupabaseGlobalDailyLimits(limits: Record<string, number | null>) {
-  const writeLimits = (body: Record<string, number | null>) =>
-    supabaseRequest<null>(`${limitSettingsSupabaseTable}?on_conflict=id`, {
+  try {
+    await supabaseRequest<null>(`${limitSettingsSupabaseTable}?on_conflict=id`, {
       method: "POST",
       headers: {
         Prefer: "resolution=merge-duplicates,return=minimal",
       },
       body: JSON.stringify({
         id: limitSettingsSupabaseId,
-        ...body,
+        ...limits,
         updated_at: new Date().toISOString(),
       }),
     });
-
-  try {
-    await writeLimits(limits);
   } catch (error) {
-    if (!isMissingSupabaseDebugColumnError(error)) throw error;
-    if ("debug_per_day" in limits) throw new Error(debugSupabaseSetupMessage);
+    const missingColumn = getMissingSupabaseLimitColumn(error);
+    if (!missingColumn) throw error;
 
-    await writeLimits(limits);
+    throw new Error(supabaseSetupMessageByColumn[missingColumn]);
   }
 }
 

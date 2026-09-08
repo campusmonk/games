@@ -87,7 +87,7 @@ export default async function HtmlQuizPage({
   storageKey,
   title,
 }: HtmlQuizPageProps) {
-  const quota = await claimDailyAttempt("game", quizId);
+  const quota = await claimDailyAttempt("quiz", quizId);
   if (!quota.allowed) return createElement(DailyLimitReached, { status: quota });
 
   const basePath = join(process.cwd(), "src/app/quiz", folder);

@@ -95,3 +95,12 @@ export async function updateDebugLimitAction(_state: AdminActionState, formData:
 
   return { message: result.message };
 }
+
+export async function updateQuizLimitAction(_state: AdminActionState, formData: FormData) {
+  if (!(await getAdminSession())) redirect("/admin/login");
+
+  const result = await updateGlobalDailyLimit("quiz", formData.get("quizPerDay"));
+  revalidatePath("/admin");
+
+  return { message: result.message };
+}

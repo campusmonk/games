@@ -2,6 +2,7 @@
   "limits": {
     "gamesPerDay": 3,
     "communicationPerDay": 1,
-    "debugPerDay": null
+    "debugPerDay": null,
+    "quizPerDay": null
   }
 }

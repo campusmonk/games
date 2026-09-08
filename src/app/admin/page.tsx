@@ -79,6 +79,12 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
                   {limits.debugPerDay ?? "Unlimited"}
                 </p>
               </div>
+              <div className="rounded-md border border-border bg-background p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Quiz / day</p>
+                <p className="mt-2 font-game text-3xl leading-none text-card-foreground">
+                  {limits.quizPerDay ?? "Unlimited"}
+                </p>
+              </div>
             </div>
 
             {demoEmail ? (
