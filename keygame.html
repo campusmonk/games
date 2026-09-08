@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lock & Key Memory Game</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f0f2f5; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
+        h1 { color: #1a1a1a; margin-bottom: 5px; text-align: center; }
+        p { color: #555; margin-top: 0; text-align: center; }
+
+        .controls { margin: 15px 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        button { padding: 10px 18px; border: none; border-radius: 6px; background: #007bff; color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #0056b3; }
+        button.secondary { background: #28a745; }
+        button.secondary:hover { background: #1e7e34; }
+
+        .status-box { font-size: 1.1rem; font-weight: bold; margin: 10px 0; color: #333; min-height: 28px; text-align: center; }
+
+        .grid-container {
+            display: grid;
+            gap: 6px;
+            background: #ccc;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            margin-top: 10px;
+        }
+
+        .cell {
+            width: 70px;
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border-radius: 4px;
+            user-select: none;
+            position: relative;
+        }
+
+        .cell.player { background: #343a40; color: white; }
+        .cell.blocked { background: #e63946 !important; color: white; animation: shake 0.3s; }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5%); }
+            75% { transform: translateX(5%); }
+            100% { transform: translateX(0); }
+        }
+
+        .instructions { max-width: 500px; background: white; padding: 15px 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        .instructions ul { padding-left: 20px; margin-bottom: 0; }
+        .instructions li { color: #4b5563; margin: 10px 0; line-height: 1.45; }
+
+        .mobile-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 54px);
+            gap: 8px;
+            justify-content: center;
+            margin-top: 14px;
+        }
+
+        .mobile-pad button {
+            width: 54px;
+            height: 48px;
+            padding: 0;
+            font-size: 1.35rem;
+            line-height: 1;
+        }
+
+        .mobile-pad .empty {
+            visibility: hidden;
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 16px 10px; }
+            .cell { width: 56px; height: 56px; font-size: 1.7rem; }
+            button { padding: 10px 14px; }
+            .instructions { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Lock &amp; Key Memory Game</h1>
+    <p>Directional Doors: Some doors only open from one side!</p>
+
+    <div class="controls" id="levelControls">
+        <button onclick="loadLevel(0)">Level 1 (3x3)</button>
+        <button onclick="loadLevel(1)">Level 2 (3x3)</button>
+        <button onclick="loadLevel(2)">Level 3 (4x4)</button>
+        <button onclick="loadLevel(3)">Level 4 (4x4)</button>
+        <button onclick="loadLevel(4)">Level 5 (5x5)</button>
+    </div>
+
+    <div class="status-box" id="status"></div>
+    <div class="grid-container" id="grid"></div>
+
+    <div class="controls">
+        <button onclick="resetCurrentLevel()">Reset Level</button>
+        <button class="secondary" onclick="showSolution()">Show Answer / Solution Path</button>
+    </div>
+
+    <div class="mobile-pad" aria-label="Movement controls">
+        <button class="empty" tabindex="-1"></button>
+        <button onclick="move(-1, 0)" aria-label="Move up">↑</button>
+        <button class="empty" tabindex="-1"></button>
+        <button onclick="move(0, -1)" aria-label="Move left">←</button>
+        <button onclick="resetCurrentLevel()" aria-label="Reset level">↻</button>
+        <button onclick="move(0, 1)" aria-label="Move right">→</button>
+        <button class="empty" tabindex="-1"></button>
+        <button onclick="move(1, 0)" aria-label="Move down">↓</button>
+        <button class="empty" tabindex="-1"></button>
+    </div>
+
+    <div class="instructions">
+        <strong>Game Rules:</strong>
+        <ul>
+            <li>Start at the dark center square (👤).</li>
+            <li>Doors are one-way or locked from specific directions.</li>
+            <li>Hitting a locked door bounces you back to the level start.</li>
+            <li>Collect key 🔑 first, then head to the exit door 🚪.</li>
+            <li>Use arrow keys, WASD, or the on-screen arrows to move.</li>
+        </ul>
+    </div>
+
+    <script>
+        const levels = [
+            {
+                size: 3, start: [1,1], key: [0,0], door: [2,2],
+                blockedDoors: ["0,1->0,0", "1,1->1,0", "2,1->2,2"],
+                solution: "Down -> Left -> Up -> Up (Get Key) -> Down -> Down -> Right -> Up -> Right -> Down (Exit)"
+            },
+            {
+                size: 3, start: [1,1], key: [2,0], door: [0,2],
+                blockedDoors: ["1,1->1,2", "1,1->0,1", "2,1->2,2"],
+                solution: "Down -> Left (Get Key) -> Right -> Up -> Right -> Up (Exit)"
+            },
+            {
+                size: 4, start: [1,1], key: [0,3], door: [3,0],
+                blockedDoors: ["0,2->0,3", "1,1->1,2", "1,2->2,2", "2,3->3,3", "1,1->0,1", "1,2->1,3", "0,2->0,3", "2,2->2,1"],
+                solution: "Left -> Up -> Right -> Right -> Right (Get Key) -> Left -> Left -> Left -> Down -> Down -> Down (Exit)"
+            },
+            {
+                size: 4, start: [2,2], key: [0,0], door: [3,3],
+                blockedDoors: ["2,2->1,2", "2,2->2,1", "1,3->0,3", "1,2->1,1", "2,3->3,3", "2,2->3,2", "2,0->2,1", "2,0->3,0"],
+                solution: "Right -> Up -> Up -> Left -> Left -> Left (Get Key) -> Down -> Down -> Down -> Right -> Right -> Right (Exit)"
+            },
+            {
+                size: 5,
+                start: [2,2],
+                key: [0,4],
+                door: [4,0],
+                blockedDoors: [
+                    "2,2->2,3", "2,2->3,2", "2,2->2,1",
+                    "1,2->1,1", "1,2->1,3",
+                    "0,2->0,1",
+                    "0,3->0,4",
+                    "1,3->2,3",
+                    "1,4->1,3",
+                    "2,4->2,3",
+                    "3,4->4,4",
+                    "3,3->2,3", "3,3->3,2",
+                    "4,3->4,4",
+                    "4,2->3,2",
+                    "4,1->4,0",
+                    "3,1->2,1",
+                    "3,0->2,0"
+                ],
+                solution: "Up -> Up -> Right -> Down -> Right -> Up (Get Key) -> Down -> Down -> Down -> Left -> Down -> Left -> Left -> Up -> Left -> Down (Exit)"
+            }
+        ];
+
+        let currentLevelIdx = 0;
+        let playerPos = [0, 0];
+        let hasKey = false;
+        let isLocked = false;
+
+        function loadLevel(idx) {
+            currentLevelIdx = idx;
+            const lvl = levels[idx];
+            playerPos = [...lvl.start];
+            hasKey = false;
+            isLocked = false;
+            document.getElementById('status').innerText = `Level ${idx + 1} (${lvl.size}x${lvl.size}) - Find Key!`;
+            document.getElementById('status').style.color = "#333";
+            renderGrid();
+        }
+
+        function renderGrid() {
+            const lvl = levels[currentLevelIdx];
+            const gridEl = document.getElementById('grid');
+            const cellSize = window.innerWidth <= 480 ? 56 : 70;
+            gridEl.innerHTML = '';
+            gridEl.style.gridTemplateColumns = `repeat(${lvl.size}, ${cellSize}px)`;
+
+            for (let r = 0; r < lvl.size; r++) {
+                for (let c = 0; c < lvl.size; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.id = `cell-${r}-${c}`;
+
+                    if (r === playerPos[0] && c === playerPos[1]) {
+                        cell.classList.add('player');
+                        cell.innerText = hasKey ? '🔑' : '👤';
+                    } else if (r === lvl.key[0] && c === lvl.key[1] && !hasKey) {
+                        cell.innerText = '🔑';
+                    } else if (r === lvl.door[0] && c === lvl.door[1]) {
+                        cell.innerText = '🚪';
+                    }
+
+                    gridEl.appendChild(cell);
+                }
+            }
+        }
+
+        function move(dr, dc) {
+            if (isLocked) return;
+
+            const lvl = levels[currentLevelIdx];
+            const newR = playerPos[0] + dr;
+            const newC = playerPos[1] + dc;
+
+            if (newR < 0 || newR >= lvl.size || newC < 0 || newC >= lvl.size) return;
+
+            const transitionKey = `${playerPos[0]},${playerPos[1]}->${newR},${newC}`;
+
+            if (lvl.blockedDoors.includes(transitionKey)) {
+                isLocked = true;
+                const targetCell = document.getElementById(`cell-${newR}-${newC}`);
+                if (targetCell) targetCell.classList.add('blocked');
+
+                document.getElementById('status').innerText = "Door Locked in this direction! Resetting...";
+                document.getElementById('status').style.color = "#e63946";
+
+                setTimeout(() => {
+                    loadLevel(currentLevelIdx);
+                }, 800);
+                return;
+            }
+
+            playerPos = [newR, newC];
+
+            if (playerPos[0] === lvl.key[0] && playerPos[1] === lvl.key[1] && !hasKey) {
+                hasKey = true;
+                document.getElementById('status').innerText = "Key Collected! Head to Door 🚪";
+                document.getElementById('status').style.color = "#28a745";
+            }
+
+            if (playerPos[0] === lvl.door[0] && playerPos[1] === lvl.door[1]) {
+                if (hasKey) {
+                    document.getElementById('status').innerText = "🎉 Level Cleared!";
+                    document.getElementById('status').style.color = "#28a745";
+                    isLocked = true;
+                } else {
+                    document.getElementById('status').innerText = "You need the Key first! 🔑";
+                    document.getElementById('status').style.color = "#d97706";
+                }
+            }
+
+            renderGrid();
+        }
+
+        function resetCurrentLevel() {
+            loadLevel(currentLevelIdx);
+        }
+
+        function showSolution() {
+            const lvl = levels[currentLevelIdx];
+            alert(`Solution Path for Level ${currentLevelIdx + 1}:\n\n${lvl.solution}`);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
+                    e.preventDefault();
+                    move(-1, 0);
+                    break;
+                case 'ArrowDown':
+                case 's':
+                case 'S':
+                    e.preventDefault();
+                    move(1, 0);
+                    break;
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
+                    e.preventDefault();
+                    move(0, -1);
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
+                    e.preventDefault();
+                    move(0, 1);
+                    break;
+            }
+        });
+
+        window.addEventListener('resize', renderGrid);
+
+        loadLevel(0);
+    </script>
+</body>
+</html>
