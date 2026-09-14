@@ -38,6 +38,7 @@ const navLinks = [
   { href: "/docs", label: "Documentation" },
   { href: "/communication-round", label: "Communication" },
   { href: "/debug", label: "Debugging" },
+  { href: "/AI-assist", label: "AI Assist" },
   { href: "/quiz", label: "Quiz" },
 ];
 

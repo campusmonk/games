@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { accessCookieNames, verifyAccessToken } from "@/lib/access/session";
 
-const protectedPrefixes = ["/moreGames", "/accenture", "/capgemini", "/communication-round", "/debug", "/quiz"];
+const protectedPrefixes = ["/moreGames", "/accenture", "/capgemini", "/communication-round", "/debug", "/quiz", "/AI-assist"];
 
 function isProtectedPath(pathname: string) {
   return protectedPrefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
@@ -34,5 +34,6 @@ export const config = {
     "/communication-round/:path*",
     "/debug/:path*",
     "/quiz/:path*",
+    "/AI-assist/:path*",
   ],
 };

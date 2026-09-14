@@ -3,6 +3,7 @@
     "gamesPerDay": 3,
     "communicationPerDay": 1,
     "debugPerDay": null,
-    "quizPerDay": null
+    "quizPerDay": null,
+    "aiAssistPerDay": null
   }
 }

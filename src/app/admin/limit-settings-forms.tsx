@@ -1,13 +1,14 @@
 "use client";
 
 import { useActionState } from "react";
-import { Bug, Gamepad2, ListChecks, MessageSquare, Save } from "lucide-react";
+import { Bot, Bug, Gamepad2, ListChecks, MessageSquare, Save } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { GlobalDailyLimits } from "@/lib/access/daily-limits";
 
 import {
+  updateAiAssistLimitAction,
   updateCommunicationLimitAction,
   updateDebugLimitAction,
   updateGameLimitAction,
@@ -34,6 +35,10 @@ export default function LimitSettingsForms({ limits }: LimitSettingsFormsProps) 
   );
   const [quizState, quizAction, quizPending] = useActionState<AdminActionState, FormData>(
     updateQuizLimitAction,
+    {},
+  );
+  const [aiAssistState, aiAssistAction, aiAssistPending] = useActionState<AdminActionState, FormData>(
+    updateAiAssistLimitAction,
     {},
   );
 
@@ -134,6 +139,30 @@ export default function LimitSettingsForms({ limits }: LimitSettingsFormsProps) 
         <Button type="submit" disabled={quizPending} className="gap-2">
           <Save className="size-4" />
           {quizPending ? "Saving Quiz" : "Save Quiz"}
+        </Button>
+      </form>
+
+      <form action={aiAssistAction} className="grid min-w-0 gap-3 rounded-lg border border-border bg-card p-4">
+        <div className="flex items-center gap-2">
+          <Bot className="size-4 text-primary" />
+          <p className="text-sm font-semibold text-card-foreground">Attempts per AI Assist round per day</p>
+        </div>
+        <Input
+          name="aiAssistPerDay"
+          type="number"
+          min={0}
+          max={999}
+          defaultValue={limits.aiAssistPerDay ?? ""}
+          placeholder="Unlimited"
+          aria-label="Daily attempts-per-AI-Assist-round limit"
+          className="border-input bg-background text-foreground"
+        />
+        {aiAssistState.message ? (
+          <p className="break-words text-sm text-muted-foreground [overflow-wrap:anywhere]">{aiAssistState.message}</p>
+        ) : null}
+        <Button type="submit" disabled={aiAssistPending} className="gap-2">
+          <Save className="size-4" />
+          {aiAssistPending ? "Saving AI Assist" : "Save AI Assist"}
         </Button>
       </form>
     </div>

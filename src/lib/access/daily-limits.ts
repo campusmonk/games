@@ -6,7 +6,7 @@ import path from "path";
 import { requireUserAccess } from "./allowlist";
 import { invalidateMemo, memoize, memoTtlMs } from "./memo";
 
-export type DailyLimitKind = "game" | "communication" | "debug" | "quiz";
+export type DailyLimitKind = "game" | "communication" | "debug" | "quiz" | "ai-assist";
 
 export type DailyLimitStatus = {
   allowed: boolean;
@@ -43,6 +43,7 @@ export type GlobalDailyLimits = {
   communicationPerDay: number | null;
   debugPerDay: number | null;
   quizPerDay: number | null;
+  aiAssistPerDay: number | null;
 };
 
 type LimitSettingsFile = {
@@ -59,26 +60,29 @@ const defaultLimits: GlobalDailyLimits = {
   communicationPerDay: null,
   debugPerDay: null,
   quizPerDay: null,
+  aiAssistPerDay: null,
 };
 const quotaWindowMs = 24 * 60 * 60 * 1000;
 const perGameSupabaseSetupMessage =
-  "Daily limits need a Supabase schema update. Run data/supabase-daily-limits.sql in Supabase SQL editor so each game, communication round, debug assessment, and quiz can have its own daily attempt count.";
+  "Daily limits need a Supabase schema update. Run data/supabase-daily-limits.sql in Supabase SQL editor so each game, communication round, debug assessment, quiz, and AI Assist round can have its own daily attempt count.";
 // Columns added after the first release: an older Supabase schema still
 // answers for the original ones, so a missing column is recoverable.
-const optionalLimitColumns = ["debug_per_day", "quiz_per_day"] as const;
+const optionalLimitColumns = ["debug_per_day", "quiz_per_day", "ai_assist_per_day"] as const;
 const requiredLimitColumns = ["games_per_day", "communication_per_day"] as const;
 const supabaseSetupMessageByColumn: Record<(typeof optionalLimitColumns)[number], string> = {
   debug_per_day:
     "Debug assessment limits need a Supabase schema update. Run data/supabase-daily-limits.sql in Supabase SQL editor, then reload the admin page.",
   quiz_per_day:
     "Quiz limits need a Supabase schema update. Run data/supabase-daily-limits.sql in Supabase SQL editor, then reload the admin page.",
+  ai_assist_per_day:
+    "AI Assist limits need a Supabase schema update. Run data/supabase-daily-limits.sql in Supabase SQL editor, then reload the admin page.",
 };
 
 function getDateKey(date = new Date()) {
   return date.toISOString().slice(0, 10);
 }
 
-function getSupabaseConfig() {
+export function getSupabaseConfig() {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key =
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
@@ -92,7 +96,7 @@ function getSupabaseConfig() {
   return { url: url.replace(/\/$/, ""), key };
 }
 
-async function supabaseRequest<T>(pathValue: string, init: RequestInit = {}) {
+export async function supabaseRequest<T>(pathValue: string, init: RequestInit = {}) {
   const config = getSupabaseConfig();
   if (!config) throw new Error("Supabase daily limit storage is not configured.");
 
@@ -192,6 +196,7 @@ export async function getGlobalDailyLimits(): Promise<GlobalDailyLimits> {
         communicationPerDay: normalizeLimit(parsed.limits?.communicationPerDay),
         debugPerDay: normalizeLimit(parsed.limits?.debugPerDay),
         quizPerDay: normalizeLimit(parsed.limits?.quizPerDay),
+        aiAssistPerDay: normalizeLimit(parsed.limits?.aiAssistPerDay),
       };
     } catch {
       return defaultLimits;
@@ -206,6 +211,7 @@ async function writeGlobalDailyLimits(limits: GlobalDailyLimits) {
       communication_per_day: limits.communicationPerDay,
       debug_per_day: limits.debugPerDay,
       quiz_per_day: limits.quizPerDay,
+      ai_assist_per_day: limits.aiAssistPerDay,
     });
     return;
   }
@@ -224,6 +230,7 @@ export async function updateGlobalDailyLimit(kind: DailyLimitKind, value: FormDa
     communication: "communicationPerDay",
     debug: "debugPerDay",
     quiz: "quizPerDay",
+    "ai-assist": "aiAssistPerDay",
   };
   const nextLimits = {
     ...currentLimits,
@@ -237,6 +244,7 @@ export async function updateGlobalDailyLimit(kind: DailyLimitKind, value: FormDa
         communication: "communication_per_day",
         debug: "debug_per_day",
         quiz: "quiz_per_day",
+        "ai-assist": "ai_assist_per_day",
       };
 
       await writeSupabaseGlobalDailyLimits({
@@ -262,6 +270,7 @@ function getLimitForKind(limits: GlobalDailyLimits, kind: DailyLimitKind) {
   if (kind === "communication") return limits.communicationPerDay;
   if (kind === "debug") return limits.debugPerDay;
   if (kind === "quiz") return limits.quizPerDay;
+  if (kind === "ai-assist") return limits.aiAssistPerDay;
 
   return limits.gamesPerDay;
 }
@@ -358,6 +367,7 @@ async function readSupabaseGlobalDailyLimits(): Promise<GlobalDailyLimits> {
         communicationPerDay: normalizeLimit(settings.communication_per_day),
         debugPerDay: normalizeLimit(settings.debug_per_day),
         quizPerDay: normalizeLimit(settings.quiz_per_day),
+        aiAssistPerDay: normalizeLimit(settings.ai_assist_per_day),
       };
     } catch (error) {
       const missingColumn = getMissingSupabaseLimitColumn(error);
