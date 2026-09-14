@@ -7,11 +7,18 @@
 @theme inline {
   --font-game: var(--font-game);
   --font-inter: var(--font-inter);
+  --font-dm-sans: var(--font-dm-sans);
+  --font-instrument-serif: var(--font-instrument-serif);
+  --font-montserrat: var(--font-montserrat);
+  --font-playfair-display: var(--font-playfair-display);
+  --font-poppins: var(--font-poppins);
+  --font-special-gothic-expanded-one: var(--font-special-gothic-expanded-one);
+  --font-syne: var(--font-syne);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-dm-sans);
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-  --font-heading: var(--font-game);
+  --font-heading: var(--font-instrument-serif);
 
   /* --- Hard-offset "pop" shadows -------------------------------------
      The signature look of this app. Every one of these used to be written
