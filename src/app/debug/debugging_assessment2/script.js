@@ -881,6 +881,13 @@ $("prev").addEventListener('click', () => {
 $select("language").addEventListener('change', () => {
     const newLang = $select("language").value;
     if (STARTER_CODES[newLang]) {
+        if (newLang !== selectedLang && !manualLocked[active] && !solved[active]) {
+            // Switching language restarts the active question's timer from 20:00.
+            remaining[active] = LIMIT;
+            expired[active] = false;
+            lastTick = Date.now();
+            renderTimer();
+        }
         selectedLang = newLang;
         if (!codesByLang[selectedLang]) {
             codesByLang[selectedLang] = [...STARTER_CODES[selectedLang]];
@@ -916,6 +923,15 @@ function saveState() {
     } catch { /* ignore */ }
 }
 
+// Older saved states still contain "// BUG: ..." hint comments; remove them.
+const BUG_HINT = /^[ \t]*(\/\/|#)[ \t]*BUG:.*(\r?\n|$)|[ \t]*(\/\/|#)[ \t]*BUG:.*$/gm;
+function stripBugHints() {
+    Object.keys(codesByLang).forEach(lang => {
+        if (!Array.isArray(codesByLang[lang])) return;
+        codesByLang[lang] = codesByLang[lang].map(c => typeof c === 'string' ? c.replace(BUG_HINT, '') : c);
+    });
+}
+
 function restore() {
     try {
         const raw = localStorage.getItem('cm_debug_state_native');
@@ -936,6 +952,7 @@ function restore() {
         } else if (Array.isArray(s.codes)) {
             codesByLang['C++'] = s.codes;
         }
+        stripBugHints();
     } catch { /* ignore corrupt */ }
 }
 
