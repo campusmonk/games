@@ -248,11 +248,12 @@ const REMOTE_EXEC: RemoteExecConfig = { endpoint:'https://ce.judge0.com/submissi
 let state: AppState | null = null;
 let timerHandle: ReturnType<typeof setInterval> | null = null;
 let pyodideReady: Promise<PyodideInterface> | null = null;
+const QUESTION_TIME_LIMIT = 45 * 60;
 
 function initState(): void {
   state = {
     current: 0,
-    timeLeft: 45*60,
+    timeLeft: QUESTION_TIME_LIMIT,
     finished:false,
     questions: PROBLEMS.map((p: Problem): QuestionState => ({
       language:'javascript',
@@ -309,14 +310,29 @@ function beginAssessment(): void {
   startTimer();
 }
 
+function resetTimer(): void {
+  if (!state || state.finished) return;
+  state.timeLeft = QUESTION_TIME_LIMIT;
+  startTimer();
+}
+
 function startTimer(): void {
+  if (timerHandle) {
+    clearInterval(timerHandle);
+    timerHandle = null;
+  }
   updateTimerDisplay();
   timerHandle = setInterval(()=>{
-    if(!state || state.finished){ clearInterval(timerHandle); return; }
+    if(!state || state.finished){
+      clearInterval(timerHandle);
+      timerHandle = null;
+      return;
+    }
     state.timeLeft--;
     updateTimerDisplay();
     if(state.timeLeft<=0){
       clearInterval(timerHandle);
+      timerHandle = null;
       lockAssessment();
     }
   },1000);
@@ -329,9 +345,9 @@ function updateTimerDisplay(): void {
   document.getElementById('timerBox').classList.toggle('low', state.timeLeft<=120);
 }
 function lockAssessment(): void {
-  document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement>('textarea.code, .chat-input-row input, .quickgrid button, #sendChat').forEach(el=>el.disabled=true);
+  document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement>('textarea.code, .chat-input-row input, .quickgrid button, #sendChat, #runBtn, #resetBtn').forEach(el=>el.disabled=true);
   const cp = document.getElementById('centerPanel');
-  if(cp && !cp.querySelector('.note')) cp.insertAdjacentHTML('beforeend','<div class="note">Time is up. You can still submit the final report with what you have.</div>');
+  if(cp && !cp.querySelector('.note')) cp.insertAdjacentHTML('beforeend','<div class="note">Time is up for this question (45 mins). You can submit this question with what you have or switch to another question.</div>');
 }
 
 /* ============================================================
@@ -343,6 +359,9 @@ function renderAll(): void {
   renderLeft();
   renderCenter();
   renderRight();
+  if (state.timeLeft <= 0) {
+    lockAssessment();
+  }
 }
 
 function renderLeft(): void {
@@ -371,6 +390,7 @@ function renderLeft(): void {
     const idx=Number(btn.dataset.qindex);
     if(idx<0 || idx>=PROBLEMS.length || idx===state.current) return;
     state.current=idx;
+    resetTimer();
     renderAll();
   }));
 }
@@ -441,7 +461,8 @@ function bindCenterEvents(): void {
     q.code = p.starters[newLang];
     q.testResults = null;
     q.resultsCollapsed = false;
-    renderCenter();
+    resetTimer();
+    renderAll();
   });
   document.getElementById('resetBtn').addEventListener('click',()=>{
     if(!confirm('Reset your code back to the starter for this question?')) return;
@@ -1225,7 +1246,10 @@ async function finishAssessment(): Promise<void> {
     // Tells the host page this assist is finished so the next one unlocks.
     window.parent.postMessage({ type: 'cm-ai-assist-finished' }, '*');
   state.finished = true;
-  clearInterval(timerHandle);
+  if (timerHandle) {
+    clearInterval(timerHandle);
+    timerHandle = null;
+  }
   document.getElementById('appwrap').classList.add('hidden');
   const finalWrap = document.getElementById('finalWrap');
   finalWrap.classList.remove('hidden');

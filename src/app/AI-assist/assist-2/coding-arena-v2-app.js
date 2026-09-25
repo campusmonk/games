@@ -106,10 +106,11 @@ const REMOTE_EXEC = { endpoint: 'https://ce.judge0.com/submissions', languageId:
 let state = null;
 let timerHandle = null;
 let pyodideReady = null;
+const QUESTION_TIME_LIMIT = 45 * 60;
 function initState() {
     state = {
         current: 0,
-        timeLeft: 45 * 60,
+        timeLeft: QUESTION_TIME_LIMIT,
         finished: false,
         questions: PROBLEMS.map((p) => ({
             language: 'javascript',
@@ -162,17 +163,30 @@ function beginAssessment() {
     renderAll();
     startTimer();
 }
+function resetTimer() {
+    if (!state || state.finished) {
+        return;
+    }
+    state.timeLeft = QUESTION_TIME_LIMIT;
+    startTimer();
+}
 function startTimer() {
+    if (timerHandle) {
+        clearInterval(timerHandle);
+        timerHandle = null;
+    }
     updateTimerDisplay();
     timerHandle = setInterval(() => {
         if (!state || state.finished) {
             clearInterval(timerHandle);
+            timerHandle = null;
             return;
         }
         state.timeLeft--;
         updateTimerDisplay();
         if (state.timeLeft <= 0) {
             clearInterval(timerHandle);
+            timerHandle = null;
             lockAssessment();
         }
     }, 1000);
@@ -185,10 +199,10 @@ function updateTimerDisplay() {
     document.getElementById('timerBox').classList.toggle('low', state.timeLeft <= 120);
 }
 function lockAssessment() {
-    document.querySelectorAll('textarea.code, .chat-input-row input, .quickgrid button, #sendChat').forEach(el => el.disabled = true);
+    document.querySelectorAll('textarea.code, .chat-input-row input, .quickgrid button, #sendChat, #runBtn, #resetBtn').forEach(el => el.disabled = true);
     const cp = document.getElementById('centerPanel');
     if (cp && !cp.querySelector('.note'))
-        cp.insertAdjacentHTML('beforeend', '<div class="note">Time is up. You can still submit the final report with what you have.</div>');
+        cp.insertAdjacentHTML('beforeend', '<div class="note">Time is up for this question (45 mins). You can submit this question with what you have or switch to another question.</div>');
 }
 /* ============================================================
    RENDER
@@ -199,6 +213,9 @@ function renderAll() {
     renderLeft();
     renderCenter();
     renderRight();
+    if (state.timeLeft <= 0) {
+        lockAssessment();
+    }
 }
 function renderLeft() {
     const p = PROBLEMS[state.current];
@@ -227,6 +244,7 @@ function renderLeft() {
         if (idx < 0 || idx >= PROBLEMS.length || idx === state.current)
             return;
         state.current = idx;
+        resetTimer();
         renderAll();
     }));
 }
@@ -301,7 +319,8 @@ function bindCenterEvents() {
         q.code = p.starters[newLang];
         q.testResults = null;
         q.resultsCollapsed = false;
-        renderCenter();
+        resetTimer();
+        renderAll();
     });
     document.getElementById('resetBtn').addEventListener('click', () => {
         if (!confirm('Reset your code back to the starter for this question?'))
@@ -1151,7 +1170,10 @@ async function finishAssessment() {
     // Tells the host page this assist is finished so the next one unlocks.
     window.parent.postMessage({ type: 'cm-ai-assist-finished' }, '*');
     state.finished = true;
-    clearInterval(timerHandle);
+    if (timerHandle) {
+        clearInterval(timerHandle);
+        timerHandle = null;
+    }
     document.getElementById('appwrap').classList.add('hidden');
     const finalWrap = document.getElementById('finalWrap');
     finalWrap.classList.remove('hidden');
