@@ -23,7 +23,7 @@ body.light{
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text-hi);font-family:'IBM Plex Sans',sans-serif;height:100%;}
 h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;margin:0;font-weight:600;letter-spacing:-0.01em;}
 p{margin:0;color:var(--text-mid);line-height:1.6;}
-code,pre,.mono{font-family:'JetBrains Mono',monospace;}
+code,pre,.mono{font-family:'JetBrains Mono',monospace;font-variant-ligatures:none !important;font-feature-settings:"liga" 0,"calt" 0 !important;-webkit-font-feature-settings:"liga" 0,"calt" 0 !important;}
 button{font-family:'IBM Plex Sans',sans-serif;cursor:pointer;border:none;}
 textarea,input,select{font-family:'IBM Plex Sans',sans-serif;background:var(--bg-soft);border:1px solid var(--border);color:var(--text-hi);border-radius:8px;padding:10px 12px;font-size:14px;outline:none;}
 textarea:focus,input:focus,select:focus{border-color:var(--gold-500);}
@@ -101,7 +101,7 @@ nav.toptabs button.active{background:var(--card-hi);color:var(--gold-300);}
 .editor-topbar select{font-size:12px;padding:5px 8px;}
 .codewrap{flex:1;display:flex;overflow:hidden;}
 .gutter{padding:14px 8px;text-align:right;color:var(--text-low);font-size:13px;line-height:20px;user-select:none;background:var(--bg-soft);border-right:1px solid var(--border-soft);min-width:38px;overflow:hidden;white-space:pre;}
-textarea.code{flex:1;border:none;background:transparent;color:var(--text-hi);resize:none;font-size:13px;line-height:20px;padding:14px;white-space:pre;overflow:auto;}
+textarea.code{flex:1;border:none;background:transparent;color:var(--text-hi);resize:none;font-size:13px;line-height:20px;padding:14px;white-space:pre;overflow:auto;font-variant-ligatures:none !important;font-feature-settings:"liga" 0,"calt" 0 !important;-webkit-font-feature-settings:"liga" 0,"calt" 0 !important;text-rendering:optimizeSpeed;}
 textarea.code:focus{border:none;box-shadow:none;}
 .testresults{border-top:1px solid var(--border-soft);display:flex;flex-direction:column;min-height:0;}
 .tr-head{display:flex;justify-content:space-between;padding:10px 14px;font-size:12.5px;color:var(--text-low);position:sticky;top:0;background:var(--bg-soft);z-index:2;}

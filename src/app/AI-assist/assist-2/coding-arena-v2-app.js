@@ -262,7 +262,7 @@ function renderCenter() {
       </div>
       <div class="codewrap">
         <div class="gutter mono" id="gutter"></div>
-        <textarea class="code mono" id="codeArea" spellcheck="false">${escapeHtml(q.code)}</textarea>
+        <textarea class="code mono" id="codeArea" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">${escapeHtml(q.code)}</textarea>
       </div>
       ${q.testResults ? `
       <div class="testresults ${q.resultsCollapsed ? 'collapsed' : ''}">
@@ -352,6 +352,18 @@ function syncGutter() {
     gutter.textContent = out;
 }
 function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+// Mobile keyboards may insert Unicode operators/quotes (or a font ligature
+// may render "!=" as "≠"). Normalize them back to ASCII before running so
+// pasted/typed code never fails with a syntax error.
+function normalizeCodeOperators(code) {
+    return code
+        .replace(/≠/g, '!=')
+        .replace(/≤/g, '<=')
+        .replace(/≥/g, '>=')
+        .replace(/[“”„]/g, '"')
+        .replace(/[‘’‚‛]/g, "'")
+        .replace(/–|—/g, '-');
+}
 function summaryText(results) {
     const passed = results.filter(r => r.pass).length;
     return `${passed}/${results.length} passed`;
@@ -634,6 +646,13 @@ async function runCode() {
     const q = state.questions[state.current];
     const problem = PROBLEMS[state.current];
     const runBtn = document.getElementById('runBtn');
+    const normalized = normalizeCodeOperators(q.code);
+    if (normalized !== q.code) {
+        q.code = normalized;
+        const ta = document.getElementById('codeArea');
+        if (ta)
+            ta.value = normalized;
+    }
     runBtn.disabled = true;
     runBtn.textContent = 'Running…';
     try {
